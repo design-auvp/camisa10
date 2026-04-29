@@ -58,28 +58,16 @@
             background-color: #000;
         }
 
-        .video-container iframe {
+        .video-container video {
+            min-width: 100%;
+            min-height: 100%;
+            object-fit: cover;
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 100vw;
-            height: 100vh;
             transform: translate(-50%, -50%);
-            pointer-events: none; /* Impede interação do usuário com o iframe */
+            pointer-events: none;
             filter: grayscale(20%) contrast(120%);
-        }
-
-        /* Truque para manter proporção 16:9 do YouTube cobrindo a tela toda */
-        @media (min-aspect-ratio: 16/9) {
-            .video-container iframe {
-                height: 56.25vw;
-            }
-        }
-
-        @media (max-aspect-ratio: 16/9) {
-            .video-container iframe {
-                width: 177.78vh;
-            }
         }
 
         /* Overlay Preto */
@@ -89,7 +77,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.85); /* Escuro, permitindo ver um pouco do fundo */
+            background: rgba(0, 0, 0, 0.65); /* Overlay clareado (antes era 0.85) */
             z-index: 2;
             display: flex;
             justify-content: center;
@@ -268,8 +256,10 @@
 
     <!-- Background Video -->
     <div class="video-container">
-        <!-- Vídeo do YouTube embutido com parâmetros de autoplay, loop e mute -->
-        <iframe id="bgVideo" src="https://www.youtube.com/embed/8PLBoTOBZ-0?autoplay=1&mute=1&loop=1&playlist=8PLBoTOBZ-0&controls=0&showinfo=0&rel=0&iv_load_policy=3&playsinline=1" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+        <!-- Vídeo MP4 direto do GitHub -->
+        <video autoplay loop muted playsinline id="bgVideo">
+            <source src="https://raw.githubusercontent.com/design-auvp/camisa10/main/YTDown_YouTube_Street-Clothing-Brand-Promotional-Video_Media_5i0vYvWcaGo_001_1080p.mp4" type="video/mp4">
+        </video>
     </div>
 
     <!-- Camada Escura e Chamada Inicial -->
