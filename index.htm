@@ -104,7 +104,7 @@
         .input-brutal {
             border: 3px solid #000;
             border-radius: 0;
-            padding: 0.75rem;
+            padding: 0.6rem;
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 700;
             background-color: #fff;
@@ -117,12 +117,18 @@
             outline: none;
             background-color: #009C3B;
             color: #fff;
-            box-shadow: 6px 6px 0px 0px rgba(0,0,0,1);
-            transform: translate(-4px, -4px);
+            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+            transform: translate(-2px, -2px);
         }
 
         .input-brutal:focus::placeholder {
             color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .input-error {
+            background-color: #ffeaea !important;
+            border-color: #ff0000 !important;
+            color: #ff0000 !important;
         }
 
         /* Botão Interativo Inicial */
@@ -219,7 +225,7 @@
 
         @media (min-width: 768px) {
             .input-brutal {
-                padding: 1rem;
+                padding: 0.8rem;
             }
         }
 
@@ -286,12 +292,12 @@
     <section id="form-section">
         
         <!-- DOBRA 1: O Formulário -->
-        <div class="min-h-screen w-full flex items-center justify-center py-10 px-4">
+        <div class="min-h-screen w-full flex items-center justify-center py-6 px-4 md:py-10">
             <div class="content-box brutal-border shadow-brutal-yellow transform transition-all duration-700 translate-y-10" id="main-card">
                 
                 <!-- Esquerda: Carrossel de Imagens -->
-                <div class="w-full lg:w-1/2 relative bg-dark-bg h-[40vh] md:h-[50vh] lg:h-auto lg:min-h-[600px]">
-                    <div class="absolute top-4 left-4 z-20 bg-neon-yellow text-black font-brutal text-xl md:text-2xl px-3 py-1 brutal-border shadow-brutal">
+                <div class="w-full lg:w-5/12 relative bg-dark-bg h-[30vh] md:h-[40vh] lg:h-auto lg:min-h-[700px]">
+                    <div class="absolute top-4 left-4 z-20 bg-neon-yellow text-black font-brutal text-xl px-3 py-1 brutal-border shadow-brutal">
                         LIMITADO
                     </div>
                     
@@ -303,88 +309,153 @@
                         </div>
                     </div>
 
-                    <button id="prev-btn" class="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white text-black w-10 h-10 md:w-12 md:h-12 items-center justify-center brutal-border hover:bg-flag-green hover:text-white transition-colors z-20 font-brutal text-xl md:text-2xl">
+                    <button id="prev-btn" class="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white text-black w-10 h-10 items-center justify-center brutal-border hover:bg-flag-green hover:text-white transition-colors z-20 font-brutal text-xl">
                         &lt;
                     </button>
-                    <button id="next-btn" class="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white text-black w-10 h-10 md:w-12 md:h-12 items-center justify-center brutal-border hover:bg-flag-green hover:text-white transition-colors z-20 font-brutal text-xl md:text-2xl">
+                    <button id="next-btn" class="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white text-black w-10 h-10 items-center justify-center brutal-border hover:bg-flag-green hover:text-white transition-colors z-20 font-brutal text-xl">
                         &gt;
                     </button>
                 </div>
 
                 <!-- Direita: Formulário de Coleta -->
-                <div class="w-full lg:w-1/2 bg-white p-5 md:p-10 text-black flex flex-col justify-center z-10">
-                    <div class="mb-6 md:mb-8">
-                        <h2 class="font-brutal text-4xl md:text-5xl lg:text-6xl uppercase leading-none mb-2 text-dark-bg">
+                <div class="w-full lg:w-7/12 bg-white p-5 md:p-8 text-black flex flex-col justify-center z-10">
+                    <div class="mb-4 md:mb-6">
+                        <h2 class="font-brutal text-3xl md:text-5xl uppercase leading-none mb-2 text-dark-bg">
                             TORÇA COM A <br><span class="text-flag-blue">AUVP CAPITAL</span>
                         </h2>
-                        <p class="font-body font-bold text-gray-600 text-xs md:text-sm lg:text-base border-l-4 border-flag-green pl-3 md:pl-4">
+                        <p class="font-body font-bold text-gray-600 text-xs md:text-sm border-l-4 border-flag-green pl-3">
                             Preencha seus dados para receber a camiseta exclusiva da campanha da Copa. Quantidades limitadas.
                         </p>
                     </div>
 
-                    <form id="lead-form" class="space-y-3 md:space-y-4">
-                        <div>
-                            <label class="block font-brutal text-lg md:text-xl mb-1 uppercase">Nome Completo</label>
-                            <input type="text" required placeholder="DIGITE SEU NOME" class="input-brutal">
-                        </div>
+                    <form id="lead-form" class="space-y-3">
                         
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
-                            <div>
-                                <label class="block font-brutal text-lg md:text-xl mb-1 uppercase">E-mail</label>
-                                <input type="email" required placeholder="SEU@EMAIL.COM" class="input-brutal">
+                        <!-- Indicador de Etapas -->
+                        <div class="flex items-center justify-between mb-2 border-b-4 border-black pb-2">
+                            <h3 id="step-title" class="font-brutal text-xl md:text-2xl text-flag-blue uppercase">1. Dados Pessoais</h3>
+                            <span id="step-counter" class="font-brutal bg-neon-yellow text-black px-2 py-1 brutal-border text-sm">ETAPA 1/2</span>
+                        </div>
+
+                        <!-- Grid wrapper para sobrepor as etapas sem mudar a altura -->
+                        <div class="grid relative items-start">
+                            
+                            <!-- ETAPA 1: Dados Pessoais -->
+                            <div id="step-1" class="col-start-1 row-start-1 space-y-3 transition-all duration-300 opacity-100 visible z-10">
+                                
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                    <div class="md:col-span-2">
+                                        <label class="block font-brutal text-sm md:text-base mb-1 uppercase">Nome Completo</label>
+                                        <input type="text" required placeholder="DIGITE SEU NOME" class="input-brutal">
+                                    </div>
+                                    <div>
+                                        <label class="block font-brutal text-sm md:text-base mb-1 uppercase text-flag-blue">CPF *</label>
+                                        <input type="text" id="cpf" maxlength="14" required placeholder="000.000.000-00" class="input-brutal font-body">
+                                    </div>
+                                    <div>
+                                        <label class="block font-brutal text-sm md:text-base mb-1 uppercase">WhatsApp</label>
+                                        <input type="tel" id="whatsapp" maxlength="15" required placeholder="(00) 00000-0000" class="input-brutal">
+                                    </div>
+                                    <div class="md:col-span-2">
+                                        <label class="block font-brutal text-sm md:text-base mb-1 uppercase">E-mail</label>
+                                        <input type="email" required placeholder="SEU@EMAIL.COM" class="input-brutal">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block font-brutal text-sm md:text-base mb-1 uppercase mt-2">Tamanho da Camiseta</label>
+                                    <div class="grid grid-cols-5 gap-2">
+                                        <label class="cursor-pointer">
+                                            <input type="radio" name="size" value="P" class="peer sr-only" required>
+                                            <div class="w-full text-center py-2 brutal-border bg-gray-100 font-brutal text-lg peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal hover:bg-gray-200 transition-all">P</div>
+                                        </label>
+                                        <label class="cursor-pointer">
+                                            <input type="radio" name="size" value="M" class="peer sr-only">
+                                            <div class="w-full text-center py-2 brutal-border bg-gray-100 font-brutal text-lg peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal hover:bg-gray-200 transition-all">M</div>
+                                        </label>
+                                        <label class="cursor-pointer">
+                                            <input type="radio" name="size" value="G" class="peer sr-only">
+                                            <div class="w-full text-center py-2 brutal-border bg-gray-100 font-brutal text-lg peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal hover:bg-gray-200 transition-all">G</div>
+                                        </label>
+                                        <label class="cursor-pointer">
+                                            <input type="radio" name="size" value="GG" class="peer sr-only">
+                                            <div class="w-full text-center py-2 brutal-border bg-gray-100 font-brutal text-lg peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal hover:bg-gray-200 transition-all">GG</div>
+                                        </label>
+                                        <label class="cursor-pointer">
+                                            <input type="radio" name="size" value="XG" class="peer sr-only">
+                                            <div class="w-full text-center py-2 brutal-border bg-gray-100 font-brutal text-lg peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal hover:bg-gray-200 transition-all">XG</div>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <button type="button" id="next-step-btn" class="w-full bg-flag-blue text-white font-brutal text-xl md:text-2xl py-3 mt-4 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
+                                    PRÓXIMO PASSO &gt;
+                                </button>
                             </div>
-                            <div>
-                                <label class="block font-brutal text-lg md:text-xl mb-1 uppercase">WhatsApp</label>
-                                <input type="tel" id="whatsapp" maxlength="15" required placeholder="(00) 00000-0000" class="input-brutal">
+
+                            <!-- ETAPA 2: Endereço e Confirmação -->
+                            <div id="step-2" class="col-start-1 row-start-1 space-y-3 transition-all duration-300 opacity-0 invisible z-0">
+                                
+                                <div class="pt-1">
+                                    <div class="flex justify-end mb-2 h-4">
+                                        <span id="cep-loading" class="text-xs text-flag-green hidden font-body font-bold">Buscando CEP...</span>
+                                    </div>
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 mb-3">
+                                        <div class="md:col-span-4 relative">
+                                            <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">CEP *</label>
+                                            <input type="text" id="cep" maxlength="9" required placeholder="00000-000" class="input-brutal pr-8">
+                                            <svg class="w-4 h-4 absolute right-3 top-[2.2rem] text-gray-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                        </div>
+                                        <div class="md:col-span-6">
+                                            <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">Logradouro *</label>
+                                            <input type="text" id="logradouro" maxlength="40" required placeholder="Rua, Avenida, etc" class="input-brutal">
+                                        </div>
+                                        <div class="md:col-span-2">
+                                            <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">Número *</label>
+                                            <input type="text" id="numero" maxlength="40" required placeholder="123" class="input-brutal">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+                                        <div class="md:col-span-3">
+                                            <label class="block font-brutal text-xs mb-1 uppercase">Complemento</label>
+                                            <input type="text" id="complemento" maxlength="40" placeholder="Apto, Bloco (Opcional)" class="input-brutal">
+                                        </div>
+                                        <div class="md:col-span-3">
+                                            <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">Bairro *</label>
+                                            <input type="text" id="bairro" maxlength="40" required placeholder="Bairro" class="input-brutal">
+                                        </div>
+                                        <div class="md:col-span-4">
+                                            <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">Cidade *</label>
+                                            <input type="text" id="cidade" maxlength="40" required placeholder="Cidade" class="input-brutal">
+                                        </div>
+                                        <div class="md:col-span-2">
+                                            <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">UF *</label>
+                                            <input type="text" id="uf" maxlength="2" required placeholder="UF" class="input-brutal uppercase text-center px-1">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex items-start gap-2 md:gap-3 mt-4 bg-gray-50 p-3 brutal-border">
+                                    <input type="checkbox" id="consent-checkbox" required class="mt-0.5 w-5 h-5 md:w-6 md:h-6 cursor-pointer accent-[#009C3B]">
+                                    <label for="consent-checkbox" class="font-body text-xs text-gray-700 leading-tight cursor-pointer">
+                                        Aceito ter meus dados coletados para receber comunicações, brindes e campanhas futuras da AUVP. Li e concordo com os 
+                                        <span id="open-terms" class="underline font-bold text-flag-blue hover:text-flag-green transition-colors cursor-pointer">Termos da Campanha</span>.
+                                    </label>
+                                </div>
+
+                                <div class="flex gap-2 md:gap-3 mt-4">
+                                    <button type="button" id="back-step-btn" class="w-1/3 bg-white text-black font-brutal text-lg py-3 brutal-border shadow-brutal hover:bg-gray-200 hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
+                                        &lt; Voltar
+                                    </button>
+                                    <button type="submit" class="w-2/3 bg-flag-green text-white font-brutal text-xl md:text-2xl py-3 brutal-border shadow-brutal hover:bg-flag-blue hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
+                                        CONCLUIR
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
-                        <div>
-                            <label class="block font-brutal text-lg md:text-xl mb-1 uppercase">Tamanho da Camiseta</label>
-                            <div class="grid grid-cols-5 gap-2 md:gap-3">
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="size" value="P" class="peer sr-only" required>
-                                    <div class="w-full text-center py-2 md:py-3 brutal-border bg-gray-100 font-brutal text-lg md:text-xl peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal hover:bg-gray-200 transition-all">P</div>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="size" value="M" class="peer sr-only">
-                                    <div class="w-full text-center py-2 md:py-3 brutal-border bg-gray-100 font-brutal text-lg md:text-xl peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal hover:bg-gray-200 transition-all">M</div>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="size" value="G" class="peer sr-only">
-                                    <div class="w-full text-center py-2 md:py-3 brutal-border bg-gray-100 font-brutal text-lg md:text-xl peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal hover:bg-gray-200 transition-all">G</div>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="size" value="GG" class="peer sr-only">
-                                    <div class="w-full text-center py-2 md:py-3 brutal-border bg-gray-100 font-brutal text-lg md:text-xl peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal hover:bg-gray-200 transition-all">GG</div>
-                                </label>
-                                <label class="cursor-pointer">
-                                    <input type="radio" name="size" value="XG" class="peer sr-only">
-                                    <div class="w-full text-center py-2 md:py-3 brutal-border bg-gray-100 font-brutal text-lg md:text-xl peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal hover:bg-gray-200 transition-all">XG</div>
-                                </label>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block font-brutal text-lg md:text-xl mb-1 uppercase">CEP para Envio</label>
-                            <input type="text" id="cep" maxlength="9" required placeholder="00000-000" class="input-brutal">
-                        </div>
-
-                        <!-- Checkbox de Consentimento -->
-                        <div class="flex items-start gap-2 md:gap-3 mt-3 md:mt-4 bg-gray-50 p-3 md:p-4 brutal-border">
-                            <input type="checkbox" id="consent-checkbox" required class="mt-0.5 w-5 h-5 md:w-6 md:h-6 cursor-pointer accent-[#009C3B]">
-                            <label for="consent-checkbox" class="font-body text-xs md:text-sm text-gray-700 leading-tight cursor-pointer">
-                                Aceito ter meus dados coletados para receber comunicações, brindes e campanhas futuras da AUVP. Li e concordo com os 
-                                <span id="open-terms" class="underline font-bold text-flag-blue hover:text-flag-green transition-colors cursor-pointer">Termos da Campanha</span>.
-                            </label>
-                        </div>
-
-                        <button type="submit" class="w-full bg-flag-blue text-white font-brutal text-2xl md:text-3xl py-3 md:py-4 mt-4 md:mt-6 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
-                            GARANTIR MINHA CAMISETA
-                        </button>
-
-                        <div class="text-center mt-4">
-                            <button type="button" id="scroll-to-rules" class="underline font-bold text-flag-blue hover:text-flag-green transition-colors cursor-pointer font-body text-sm md:text-base">
+                        <div class="text-center mt-3 pt-2">
+                            <button type="button" id="scroll-to-rules" class="underline font-bold text-flag-blue hover:text-flag-green transition-colors cursor-pointer font-body text-xs md:text-sm">
                                 Conheça as condições para participar!
                             </button>
                         </div>
@@ -572,10 +643,88 @@
                 showSlide(currentSlide - 1);
             });
 
-            // --- Lógica do Formulário ---
+            // --- Validação de CPF ---
+            function isCPFValid(cpf) {
+                cpf = cpf.replace(/[^\d]+/g, '');
+                if (cpf === '' || cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+                let soma = 0, resto;
+                for (let i = 1; i <= 9; i++) soma += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+                resto = (soma * 10) % 11;
+                if ((resto === 10) || (resto === 11)) resto = 0;
+                if (resto !== parseInt(cpf.substring(9, 10))) return false;
+                soma = 0;
+                for (let i = 1; i <= 10; i++) soma += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+                resto = (soma * 10) % 11;
+                if ((resto === 10) || (resto === 11)) resto = 0;
+                if (resto !== parseInt(cpf.substring(10, 11))) return false;
+                return true;
+            }
+
+            // --- Lógica de Etapas do Formulário ---
+            const step1 = document.getElementById('step-1');
+            const step2 = document.getElementById('step-2');
+            const nextStepBtn = document.getElementById('next-step-btn');
+            const backStepBtn = document.getElementById('back-step-btn');
+            const stepTitle = document.getElementById('step-title');
+            const stepCounter = document.getElementById('step-counter');
+
+            nextStepBtn.addEventListener('click', () => {
+                // Valida os campos da Etapa 1
+                const inputsStep1 = step1.querySelectorAll('input[required]');
+                let isValid = true;
+                
+                inputsStep1.forEach(input => {
+                    if (!input.checkValidity()) {
+                        input.reportValidity();
+                        isValid = false;
+                    }
+                });
+
+                if (!isValid) return;
+
+                // Validação de CPF customizada antes de avançar
+                const cpfInput = document.getElementById('cpf');
+                if (!isCPFValid(cpfInput.value)) {
+                    cpfInput.classList.add('input-error');
+                    const originalPlaceholder = cpfInput.placeholder;
+                    cpfInput.value = '';
+                    cpfInput.placeholder = 'CPF INVÁLIDO!';
+                    
+                    setTimeout(() => {
+                        cpfInput.classList.remove('input-error');
+                        cpfInput.placeholder = originalPlaceholder;
+                    }, 2500);
+                    return;
+                }
+
+                // Avança para a Etapa 2 manipulando opacidade e visibilidade no grid
+                step1.classList.remove('opacity-100', 'visible', 'z-10');
+                step1.classList.add('opacity-0', 'invisible', 'z-0');
+                
+                step2.classList.remove('opacity-0', 'invisible', 'z-0');
+                step2.classList.add('opacity-100', 'visible', 'z-10');
+                
+                stepTitle.innerHTML = '2. Endereço de Entrega';
+                stepCounter.innerHTML = 'ETAPA 2/2';
+            });
+
+            backStepBtn.addEventListener('click', () => {
+                // Volta para a Etapa 1
+                step2.classList.remove('opacity-100', 'visible', 'z-10');
+                step2.classList.add('opacity-0', 'invisible', 'z-0');
+                
+                step1.classList.remove('opacity-0', 'invisible', 'z-0');
+                step1.classList.add('opacity-100', 'visible', 'z-10');
+                
+                stepTitle.innerHTML = '1. Dados Pessoais';
+                stepCounter.innerHTML = 'ETAPA 1/2';
+            });
+
+            // --- Lógica do Formulário (Envio Final) ---
             const leadForm = document.getElementById('lead-form');
             leadForm.addEventListener('submit', (e) => {
                 e.preventDefault();
+                
                 const btn = leadForm.querySelector('button[type="submit"]');
                 const originalText = btn.innerHTML;
                 
@@ -586,6 +735,12 @@
                     btn.innerHTML = originalText;
                     btn.classList.remove('bg-gray-400', 'text-black', 'pointer-events-none');
                     leadForm.reset();
+
+                    // Reseta para a Etapa 1 após envio bem-sucedido
+                    step2.classList.add('hidden');
+                    step1.classList.remove('hidden');
+                    stepTitle.innerHTML = '1. Dados Pessoais';
+                    stepCounter.innerHTML = 'ETAPA 1/2';
                     
                     const thankYouSection = document.getElementById('thank-you-section');
                     const thankYouCard = document.getElementById('thank-you-card');
@@ -652,7 +807,13 @@
                 closeModal();
             });
 
-            // --- Máscaras ---
+            // --- Máscaras de Inputs ---
+            const cpfInput = document.getElementById('cpf');
+            cpfInput.addEventListener('input', function (e) {
+                let x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,3})(\d{0,2})/);
+                e.target.value = !x[2] ? x[1] : x[1] + '.' + x[2] + (x[3] ? '.' + x[3] : '') + (x[4] ? '-' + x[4] : '');
+            });
+
             const whatsappInput = document.getElementById('whatsapp');
             whatsappInput.addEventListener('input', function (e) {
                 let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
@@ -660,9 +821,38 @@
             });
 
             const cepInput = document.getElementById('cep');
+            const loadingCep = document.getElementById('cep-loading');
+            
             cepInput.addEventListener('input', function (e) {
                 let x = e.target.value.replace(/\D/g, '').match(/(\d{0,5})(\d{0,3})/);
                 e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2];
+            });
+
+            // --- API de CEP (ViaCEP - Alternativa Client-Side para API Correios) ---
+            cepInput.addEventListener('blur', async function (e) {
+                const cepText = e.target.value.replace(/\D/g, '');
+                if (cepText.length === 8) {
+                    loadingCep.classList.remove('hidden');
+                    try {
+                        const res = await fetch(`https://viacep.com.br/ws/${cepText}/json/`);
+                        const data = await res.json();
+                        
+                        if (!data.erro) {
+                            // Limita os dados trazidos pela API em 40 caracteres preenchendo os inputs
+                            document.getElementById('logradouro').value = (data.logradouro || '').substring(0, 40);
+                            document.getElementById('bairro').value = (data.bairro || '').substring(0, 40);
+                            document.getElementById('cidade').value = (data.localidade || '').substring(0, 40);
+                            document.getElementById('uf').value = (data.uf || '').substring(0, 2);
+                            
+                            // Foca no número para o usuário não perder tempo
+                            document.getElementById('numero').focus();
+                        }
+                    } catch (err) {
+                        console.error('Erro ao buscar o CEP', err);
+                    } finally {
+                        loadingCep.classList.add('hidden');
+                    }
+                }
             });
         });
     </script>
