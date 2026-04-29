@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AUVP | Edição Copa 2026</title>
+    <!-- Tailwind CSS para estrutura e utilitários -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fontes Brutalistas e Modernas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'flag-green': '#009C3B',
+                        'neon-yellow': '#ffe600',
+                        'flag-blue': '#002776',
+                        'dark-bg': '#0f0f0f',
+                    },
+                    fontFamily: {
+                        'brutal': ['"Righteous"', 'sans-serif'],
+                        'body': ['"Space Grotesk"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'brutal': '8px 8px 0px 0px rgba(0,0,0,1)',
+                        'brutal-white': '8px 8px 0px 0px rgba(255,255,255,1)',
+                        'brutal-green': '8px 8px 0px 0px #009C3B',
+                        'brutal-yellow': '8px 8px 0px 0px #ffe600',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* CSS Personalizado para a Estética Brutalista */
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #000;
+            overflow-x: hidden;
+        }
+
+        /* Container do Vídeo */
+        .video-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            overflow: hidden;
+            background-color: #000;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            transform: translate(-50%, -50%);
+            pointer-events: none; /* Impede interação do usuário com o iframe */
+            filter: grayscale(20%) contrast(120%);
+        }
+
+        /* Truque para manter proporção 16:9 do YouTube cobrindo a tela toda */
+        @media (min-aspect-ratio: 16/9) {
+            .video-container iframe {
+                height: 56.25vw;
+            }
+        }
+
+        @media (max-aspect-ratio: 16/9) {
+            .video-container iframe {
+                width: 177.78vh;
+            }
+        }
+
+        /* Overlay Preto */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85); /* Escuro, permitindo ver um pouco do fundo */
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: background 0.8s ease, backdrop-filter 0.8s ease;
+        }
+
+        /* Classe adicionada dinamicamente para o efeito de blur */
+        .overlay-blur {
+            background: rgba(0, 0, 0, 0.5); /* Fica um pouco mais transparente */
+            backdrop-filter: blur(15px); /* Aplica o desfoque pesado */
+            -webkit-backdrop-filter: blur(15px); /* Suporte para Safari */
+        }
+
+        /* Elementos Brutalistas */
+        .brutal-border {
+            border: 4px solid #000;
+        }
+        
+        .brutal-border-white {
+            border: 4px solid #fff;
+        }
+
+        .input-brutal {
+            border: 3px solid #000;
+            border-radius: 0;
+            padding: 0.75rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            background-color: #fff;
+            color: #000;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .input-brutal:focus {
+            outline: none;
+            background-color: #009C3B;
+            color: #fff;
+            box-shadow: 6px 6px 0px 0px rgba(0,0,0,1);
+            transform: translate(-4px, -4px);
+        }
+
+        /* Torna o placeholder branco quando o campo está focado (verde) */
+        .input-brutal:focus::placeholder {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Botão Interativo Inicial */
+        .btn-cta {
+            font-family: 'Righteous', sans-serif;
+            text-transform: uppercase;
+            font-size: 1.5rem; /* Tamanho menor adaptado para mobile */
+            color: #fff;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            z-index: 10;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+
+        /* Volta ao tamanho gigante em tablets e computadores */
+        @media (min-width: 768px) {
+            .btn-cta {
+                font-size: 3rem; 
+                letter-spacing: 2px;
+            }
+        }
+
+        .btn-cta::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background-color: #ffe600;
+            transition: width 0.3s ease;
+        }
+
+        .btn-cta:hover::after {
+            width: 100%;
+        }
+
+        .btn-cta:hover {
+            color: #ffe600;
+            transform: scale(1.05);
+        }
+
+        /* Animações e Transições */
+        .fade-out {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        #form-section, #thank-you-section {
+            opacity: 0;
+            pointer-events: none;
+            position: fixed; /* Alterado de absolute para fixed para garantir overlay correto */
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 5;
+            display: flex;
+            align-items: flex-start; /* Alterado de center para flex-start para não cortar o topo no mobile */
+            justify-content: center;
+            padding: 2rem 1rem;
+            overflow-y: auto;
+            transition: opacity 0.5s ease;
+        }
+
+        #form-section.fade-in, #thank-you-section.fade-in {
+            opacity: 1 !important;
+            pointer-events: auto !important;
+        }
+
+        /* Container do Formulário e Carrossel */
+        .content-box {
+            background-color: #fff;
+            width: 100%;
+            /* Limita a largura em telemóveis e tablets para não esticar demasiado em formato coluna */
+            max-width: 768px; 
+            display: flex;
+            flex-direction: column;
+            margin: auto; /* Isso garante que centralize verticalmente apenas quando há espaço sobrando */
+        }
+        
+        @media (min-width: 1024px) {
+            .content-box {
+                /* Volta a alargar para o desktop para o formato lado a lado */
+                max-width: 1200px;
+                flex-direction: row;
+            }
+        }
+
+        /* Ajuste de padding dos inputs para ecrãs maiores */
+        @media (min-width: 768px) {
+            .input-brutal {
+                padding: 1rem;
+            }
+        }
+
+        /* Noise Texture para vibe Tropical/Raw */
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 50;
+            opacity: 0.05;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+        
+        /* Estilos do Carrossel */
+        .carousel-slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top center;
+        }
+        .carousel-slide.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="font-body text-white">
+
+    <div class="noise"></div>
+
+    <!-- Background Video -->
+    <div class="video-container">
+        <!-- Vídeo do YouTube embutido com parâmetros de autoplay, loop e mute -->
+        <iframe id="bgVideo" src="https://www.youtube.com/embed/8PLBoTOBZ-0?autoplay=1&mute=1&loop=1&playlist=8PLBoTOBZ-0&controls=0&showinfo=0&rel=0&iv_load_policy=3&playsinline=1" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+    </div>
+
+    <!-- Camada Escura e Chamada Inicial -->
+    <div class="overlay" id="intro-overlay">
+        <div class="text-center flex flex-col items-center justify-center z-10" id="intro-content">
+            <h1 class="font-brutal text-6xl md:text-8xl lg:text-9xl mb-4 leading-none tracking-tighter text-transparent" style="-webkit-text-stroke: 2px #fff;">
+                AUVP <br> <span class="text-flag-green" style="-webkit-text-stroke: 0px;">COPA 26</span>
+            </h1>
+            <button id="start-btn" class="btn-cta mt-8">Adquira sua camisa 10</button>
+        </div>
+    </div>
+
+    <!-- Seção de Formulário e Carrossel (Inicialmente Oculta) -->
+    <section id="form-section">
+        <div class="content-box brutal-border shadow-brutal-yellow transform transition-all duration-700 translate-y-10" id="main-card">
+            
+            <!-- Esquerda: Carrossel de Imagens -->
+            <!-- Adicionado md:h-[50vh] para dar mais destaque à imagem no tablet antes de quebrar para lado a lado -->
+            <div class="w-full lg:w-1/2 relative bg-dark-bg h-[40vh] md:h-[50vh] lg:h-auto lg:min-h-[600px]">
+                <!-- Tag estilo "brutalista tropical" -->
+                <div class="absolute top-4 left-4 z-20 bg-neon-yellow text-black font-brutal text-xl md:text-2xl px-3 py-1 brutal-border shadow-brutal">
+                    LIMITADO
+                </div>
+                
+                <!-- Container das imagens: Agora absoluto para cobrir 100% da altura ditada pelo formulário -->
+                <div class="absolute inset-0 w-full h-full overflow-hidden bg-black" id="carousel-container">
+                    <!-- Imagem para Mobile/Tablet (mesma da página de obrigado) -->
+                    <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/DSC00457.jpg" class="w-full h-full object-cover object-top block lg:hidden" alt="Camiseta AUVP 10 - Mobile">
+                    
+                    <!-- Carrossel para Desktop -->
+                    <div class="hidden lg:block w-full h-full">
+                        <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/DSC00262%20(1).jpg" class="carousel-slide active" alt="Camiseta AUVP 10 - Foto 1">
+                        <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/DSC00319.jpg" class="carousel-slide" alt="Camiseta AUVP 10 - Foto 2">
+                    </div>
+                </div>
+
+                <!-- Controles do Carrossel (Ocultos no mobile) -->
+                <button id="prev-btn" class="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white text-black w-10 h-10 md:w-12 md:h-12 items-center justify-center brutal-border hover:bg-flag-green hover:text-white transition-colors z-20 font-brutal text-xl md:text-2xl">
+                    &lt;
+                </button>
+                <button id="next-btn" class="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white text-black w-10 h-10 md:w-12 md:h-12 items-center justify-center brutal-border hover:bg-flag-green hover:text-white transition-colors z-20 font-brutal text-xl md:text-2xl">
+                    &gt;
+                </button>
+            </div>
+
+            <!-- Direita: Formulário de Coleta -->
+            <div class="w-full lg:w-1/2 bg-white p-5 md:p-10 text-black flex flex-col justify-center z-10">
+                <div class="mb-6 md:mb-8">
+                    <h2 class="font-brutal text-4xl md:text-5xl lg:text-6xl uppercase leading-none mb-2 text-dark-bg">
+                        TORÇA COM A <br><span class="text-flag-blue">AUVP CAPITAL</span>
+                    </h2>
+                    <p class="font-body font-bold text-gray-600 text-xs md:text-sm lg:text-base border-l-4 border-flag-green pl-3 md:pl-4">
+                        Preencha seus dados para receber a camiseta exclusiva da campanha da Copa. Quantidades limitadas.
+                    </p>
+                </div>
+
+                <form id="lead-form" class="space-y-3 md:space-y-4">
+                    <div>
+                        <label class="block font-brutal text-lg md:text-xl mb-1 uppercase">Nome Completo</label>
+                        <input type="text" required placeholder="DIGITE SEU NOME" class="input-brutal">
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
+                        <div>
+                            <label class="block font-brutal text-lg md:text-xl mb-1 uppercase">E-mail</label>
+                            <input type="email" required placeholder="SEU@EMAIL.COM" class="input-brutal">
+                        </div>
+                        <div>
+                            <label class="block font-brutal text-lg md:text-xl mb-1 uppercase">WhatsApp</label>
+                            <input type="tel" id="whatsapp" maxlength="15" required placeholder="(00) 00000-0000" class="input-brutal">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-brutal text-lg md:text-xl mb-1 uppercase">Tamanho da Camiseta</label>
+                        <div class="grid grid-cols-5 gap-2 md:gap-3">
+                            <label class="cursor-pointer">
+                                <input type="radio" name="size" value="P" class="peer sr-only" required>
+                                <div class="w-full text-center py-2 md:py-3 brutal-border bg-gray-100 font-brutal text-lg md:text-xl peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal hover:bg-gray-200 transition-all">P</div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="size" value="M" class="peer sr-only">
+                                <div class="w-full text-center py-2 md:py-3 brutal-border bg-gray-100 font-brutal text-lg md:text-xl peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal hover:bg-gray-200 transition-all">M</div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="size" value="G" class="peer sr-only">
+                                <div class="w-full text-center py-2 md:py-3 brutal-border bg-gray-100 font-brutal text-lg md:text-xl peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal hover:bg-gray-200 transition-all">G</div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="size" value="GG" class="peer sr-only">
+                                <div class="w-full text-center py-2 md:py-3 brutal-border bg-gray-100 font-brutal text-lg md:text-xl peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal hover:bg-gray-200 transition-all">GG</div>
+                            </label>
+                            <label class="cursor-pointer">
+                                <input type="radio" name="size" value="XG" class="peer sr-only">
+                                <div class="w-full text-center py-2 md:py-3 brutal-border bg-gray-100 font-brutal text-lg md:text-xl peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal hover:bg-gray-200 transition-all">XG</div>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block font-brutal text-lg md:text-xl mb-1 uppercase">CEP para Envio</label>
+                        <input type="text" id="cep" maxlength="9" required placeholder="00000-000" class="input-brutal">
+                    </div>
+
+                    <!-- Checkbox de Consentimento -->
+                    <div class="flex items-start gap-2 md:gap-3 mt-3 md:mt-4 bg-gray-50 p-3 md:p-4 brutal-border">
+                        <input type="checkbox" id="consent-checkbox" required class="mt-0.5 w-5 h-5 md:w-6 md:h-6 cursor-pointer accent-[#009C3B]">
+                        <label for="consent-checkbox" class="font-body text-xs md:text-sm text-gray-700 leading-tight cursor-pointer">
+                            Aceito ter meus dados coletados para receber comunicações, brindes e campanhas futuras da AUVP. Li e concordo com o 
+                            <span id="open-terms" class="underline font-bold text-flag-blue hover:text-flag-green transition-colors cursor-pointer">Termo de Consentimento</span>.
+                        </label>
+                    </div>
+
+                    <button type="submit" class="w-full bg-flag-blue text-white font-brutal text-2xl md:text-3xl py-3 md:py-4 mt-4 md:mt-6 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
+                        GARANTIR MINHA CAMISETA
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Seção de Obrigado (Inicialmente Oculta) -->
+    <section id="thank-you-section">
+        <div class="bg-white max-w-2xl w-full brutal-border shadow-brutal-yellow flex flex-col transform transition-all duration-700 translate-y-10 my-auto" id="thank-you-card">
+            
+            <!-- Imagem do Topo (Oculta no mobile e tablet com 'hidden lg:block') -->
+            <div class="hidden lg:block w-full h-48 md:h-80 border-b-4 border-black overflow-hidden bg-black relative">
+                <div class="absolute top-4 left-4 z-20 bg-flag-green text-white font-brutal text-xl px-3 py-1 brutal-border shadow-brutal">
+                    SUCESSO
+                </div>
+                <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/DSC00457.jpg" class="w-full h-full object-cover object-top" alt="Obrigado AUVP">
+            </div>
+            
+            <!-- Conteúdo da Mensagem -->
+            <div class="p-6 md:p-12 text-center flex flex-col items-center z-10">
+                <h2 class="font-brutal text-4xl md:text-6xl text-flag-blue uppercase leading-none mb-4">
+                    CAMISETA RESGATADA
+                </h2>
+                <p class="font-body font-bold text-gray-700 text-base md:text-xl border-t-4 border-flag-green pt-4">
+                    Um e-mail chegará na sua conta em breve confirmando sua solicitação de resgate.
+                </p>
+                <button id="back-home-btn" class="w-full bg-flag-blue text-white font-brutal text-2xl py-3 mt-8 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
+                    VOLTAR AO INÍCIO
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popup / Modal de Termos de Consentimento -->
+    <div id="terms-modal" class="fixed inset-0 bg-black bg-opacity-80 z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white text-black p-6 md:p-10 max-w-2xl w-full brutal-border shadow-brutal-green relative transform scale-95 transition-transform duration-300" id="terms-content">
+            <button id="close-terms" class="absolute top-4 right-4 font-brutal text-2xl w-10 h-10 flex items-center justify-center brutal-border hover:bg-flag-green hover:text-white transition-colors cursor-pointer">
+                X
+            </button>
+            <h3 class="font-brutal text-4xl mb-4 text-flag-blue uppercase">Termo de Consentimento</h3>
+            
+            <div class="font-body text-sm space-y-4 max-h-[60vh] overflow-y-auto pr-4 border-l-4 border-flag-green pl-4">
+                <p><strong>1. Coleta de Dados:</strong> [Insira o texto sobre quais dados são coletados aqui. Ex: Nome, e-mail, telefone e endereço...]</p>
+                <p><strong>2. Finalidade do Uso:</strong> [Insira o texto detalhando que os dados serão usados para envio da camiseta e comunicações de marketing futuras...]</p>
+                <p><strong>3. Compartilhamento:</strong> [Insira o texto informando se os dados serão compartilhados com parceiros logísticos ou de marketing...]</p>
+                <p><strong>4. Direitos do Titular (LGPD):</strong> [Insira o texto sobre o direito de exclusão, alteração e revogação do consentimento...]</p>
+                <p><em>* Este é um texto de exemplo. Por favor, substitua por seu termo jurídico oficial fornecido pela sua equipe legal.</em></p>
+            </div>
+
+            <button id="accept-terms-btn" class="w-full bg-flag-green text-white font-brutal text-2xl py-3 mt-6 brutal-border hover:bg-dark-bg hover:text-flag-green transition-all uppercase cursor-pointer">
+                Li, Entendi e Concordo
+            </button>
+        </div>
+    </div>
+
+    <!-- Script de Interação -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const startBtn = document.getElementById('start-btn');
+            const introOverlay = document.getElementById('intro-overlay');
+            const introContent = document.getElementById('intro-content');
+            const formSection = document.getElementById('form-section');
+            const mainCard = document.getElementById('main-card');
+            const bgVideo = document.getElementById('bgVideo');
+
+            // --- Lógica de Transição (Hero -> Form) ---
+            startBtn.addEventListener('click', () => {
+                // Esconde conteúdo inicial
+                introContent.classList.add('fade-out');
+                
+                // Aplica a classe que adiciona o blur e ajusta a opacidade do overlay
+                introOverlay.classList.add('overlay-blur');
+                
+                // Mostra a seção do formulário
+                setTimeout(() => {
+                    formSection.classList.add('fade-in');
+                    // Efeito de entrada brutalista no card (remove o translate de offset)
+                    mainCard.classList.remove('translate-y-10');
+                    mainCard.classList.add('translate-y-0');
+                    
+                    // Pausa o vídeo para não distrair (Opcional, comente se quiser que continue)
+                    // bgVideo.pause(); 
+                }, 300);
+            });
+
+            // --- Lógica do Carrossel ---
+            const slides = document.querySelectorAll('.carousel-slide');
+            const nextBtn = document.getElementById('next-btn');
+            const prevBtn = document.getElementById('prev-btn');
+            let currentSlide = 0;
+
+            function showSlide(index) {
+                // Remove classe ativa de todos
+                slides.forEach(slide => slide.classList.remove('active'));
+                
+                // Ajusta o índice se passar dos limites
+                if (index >= slides.length) currentSlide = 0;
+                else if (index < 0) currentSlide = slides.length - 1;
+                else currentSlide = index;
+                
+                // Ativa o slide correto
+                slides[currentSlide].classList.add('active');
+            }
+
+            nextBtn.addEventListener('click', (e) => {
+                e.preventDefault(); // previne submissão se algo der errado
+                showSlide(currentSlide + 1);
+            });
+
+            prevBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                showSlide(currentSlide - 1);
+            });
+
+            // --- Lógica do Formulário ---
+            const leadForm = document.getElementById('lead-form');
+            leadForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                // Aqui você integrará com sua API (ex: fetch, axios, etc.)
+                const btn = leadForm.querySelector('button[type="submit"]');
+                const originalText = btn.innerHTML;
+                
+                btn.innerHTML = 'ENVIANDO DADOS...';
+                btn.classList.add('bg-gray-400', 'text-black', 'pointer-events-none');
+                
+                // Simulação de delay de envio e transição para Obrigado
+                setTimeout(() => {
+                    // Restaura botão e limpa form
+                    btn.innerHTML = originalText;
+                    btn.classList.remove('bg-gray-400', 'text-black', 'pointer-events-none');
+                    leadForm.reset();
+                    
+                    // Inicia transição para a tela de obrigado
+                    const thankYouSection = document.getElementById('thank-you-section');
+                    const thankYouCard = document.getElementById('thank-you-card');
+                    
+                    // Esconde Formulário
+                    formSection.classList.remove('fade-in');
+                    
+                    // Mostra Obrigado com delay para dar tempo do formulário sumir
+                    setTimeout(() => {
+                        thankYouSection.classList.add('fade-in');
+                        thankYouCard.classList.remove('translate-y-10');
+                        thankYouCard.classList.add('translate-y-0');
+                    }, 500);
+
+                }, 1500);
+            });
+
+            // Lógica do botão Voltar ao Início na tela de Obrigado
+            document.getElementById('back-home-btn').addEventListener('click', () => {
+                const thankYouSection = document.getElementById('thank-you-section');
+                
+                // Remove a tela de obrigado e limpa o blur do vídeo
+                thankYouSection.classList.remove('fade-in');
+                introOverlay.classList.remove('overlay-blur');
+                
+                // Mostra a chamada inicial novamente
+                setTimeout(() => {
+                    introContent.classList.remove('fade-out');
+                }, 500);
+            });
+
+            // --- Lógica do Popup de Termos de Consentimento ---
+            const termsModal = document.getElementById('terms-modal');
+            const openTermsLink = document.getElementById('open-terms');
+            const closeTermsBtn = document.getElementById('close-terms');
+            const termsContent = document.getElementById('terms-content');
+            const acceptTermsBtn = document.getElementById('accept-terms-btn');
+            const consentCheckbox = document.getElementById('consent-checkbox');
+
+            function openModal() {
+                termsModal.classList.remove('hidden');
+                // Pequeno delay para permitir a transição do display:none para block
+                setTimeout(() => {
+                    termsModal.classList.remove('opacity-0');
+                    termsContent.classList.remove('scale-95');
+                    termsContent.classList.add('scale-100');
+                }, 10);
+            }
+
+            function closeModal() {
+                termsModal.classList.add('opacity-0');
+                termsContent.classList.remove('scale-100');
+                termsContent.classList.add('scale-95');
+                // Aguarda a animação terminar para dar hidden
+                setTimeout(() => {
+                    termsModal.classList.add('hidden');
+                }, 300);
+            }
+
+            // Eventos do Modal
+            openTermsLink.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal();
+            });
+
+            closeTermsBtn.addEventListener('click', closeModal);
+
+            // Fechar ao clicar fora do conteúdo
+            termsModal.addEventListener('click', (e) => {
+                if (e.target === termsModal) closeModal();
+            });
+
+            // Botão de aceitar por dentro do modal
+            acceptTermsBtn.addEventListener('click', () => {
+                consentCheckbox.checked = true;
+                closeModal();
+            });
+
+            // --- Máscaras de Input (WhatsApp e CEP) ---
+            const whatsappInput = document.getElementById('whatsapp');
+            whatsappInput.addEventListener('input', function (e) {
+                // Remove tudo que não é dígito e aplica a formatação (XX) XXXXX-XXXX
+                let x = e.target.value.replace(/\D/g, '').match(/(\d{0,2})(\d{0,5})(\d{0,4})/);
+                e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+            });
+
+            const cepInput = document.getElementById('cep');
+            cepInput.addEventListener('input', function (e) {
+                // Remove tudo que não é dígito e aplica a formatação XXXXX-XXX
+                let x = e.target.value.replace(/\D/g, '').match(/(\d{0,5})(\d{0,3})/);
+                e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2];
+            });
+
+        });
+    </script>
+</body>
+</html>
