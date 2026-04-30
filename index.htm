@@ -383,18 +383,18 @@
                             
                             <!-- Tags das Plataformas -->
                             <div class="flex flex-wrap gap-2 md:gap-3">
-                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Spotify</span>
-                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Total Pass</span>
-                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Gym Pass</span>
-                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Kindle</span>
-                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Deezer</span>
-                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Netflix</span>
-                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">YouTube</span>
-                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">HBO</span>
                                 <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Amazon Music</span>
                                 <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Amazon Prime</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Deezer</span>
                                 <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Globo Play</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Gym Pass</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">HBO</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Kindle</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Netflix</span>
                                 <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Pet Love</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Spotify</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Total Pass</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">YouTube</span>
                             </div>
                         </div>
 
@@ -581,6 +581,13 @@
                                         </div>
                                     </div>
 
+                                    <!-- Comprovante de Débito Automático -->
+                                    <div class="mt-4 bg-gray-50 p-3 brutal-border border-black">
+                                        <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">Comprovante de Débito Automático *</label>
+                                        <p class="font-body text-xs text-gray-600 mb-2 leading-tight">Envie um print da tela comprovando que o débito automático está ativo no app BTG Banking.</p>
+                                        <input type="file" id="comprovante" accept="image/png, image/jpeg, image/webp" required class="w-full text-sm font-body bg-white border-2 border-black file:mr-4 file:py-2 file:px-4 file:border-r-2 file:border-black file:border-y-0 file:border-l-0 file:font-brutal file:bg-neon-yellow file:text-black hover:file:bg-flag-green hover:file:text-white cursor-pointer transition-colors">
+                                    </div>
+
                                     <div class="flex items-start gap-2 md:gap-3 mt-4 bg-gray-50 p-3 brutal-border">
                                         <input type="checkbox" id="consent-checkbox" required class="mt-0.5 w-5 h-5 md:w-6 md:h-6 cursor-pointer accent-[#009C3B]">
                                         <label for="consent-checkbox" class="font-body text-xs text-gray-700 leading-tight cursor-pointer">
@@ -742,7 +749,7 @@
                     FORMULÁRIO PREENCHIDO
                 </h2>
                 <p class="font-body font-bold text-gray-700 text-base md:text-lg border-t-4 border-flag-green pt-4">
-                    Todas as suas respostas passarão por uma análise de dados e adequação, com base nos pre requisitos da campanha. Caso você se encaixe, um e-mail chegará na sua conta confirmando a solicitação de resgate.
+                    Todas as respostas passarão por uma análise de dados e adequação, conforme requisitos e regulamento da campanha. Caso você se encaixe, um e-mail chegará na sua conta confirmando a solicitação de resgate.
                 </p>
                 <button id="back-home-btn" class="w-full bg-flag-blue text-white font-brutal text-2xl py-3 mt-8 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
                     VOLTAR AO INÍCIO
