@@ -870,28 +870,36 @@
     </div>
 
     <!-- Popup / Modal dos Termos da Campanha Genérico (Checkbox) -->
-    <div id="terms-modal" class="fixed inset-0 bg-black/80 z-[300] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
-        <div class="bg-dark-bg text-white p-6 md:p-10 max-w-3xl w-full brutal-border-white shadow-brutal-green relative transform scale-95 transition-transform duration-300 max-h-[90vh] flex flex-col" id="terms-content">
-            <button id="close-terms" class="absolute top-4 right-4 font-brutal text-2xl w-10 h-10 flex items-center justify-center bg-white text-black brutal-border hover:bg-flag-green hover:text-white transition-colors cursor-pointer z-10">
+    <div id="terms-modal" class="fixed inset-0 bg-black/90 z-[300] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white text-black p-6 md:p-10 max-w-2xl w-full brutal-border shadow-brutal-green relative transform scale-95 transition-transform duration-300 max-h-[90vh] flex flex-col" id="terms-content">
+            <button id="close-terms" class="absolute top-4 right-4 font-brutal text-2xl w-10 h-10 flex items-center justify-center bg-black text-white brutal-border hover:bg-red-600 transition-colors cursor-pointer z-10">
                 X
             </button>
             
-            <h3 class="font-brutal text-4xl mb-6 text-neon-yellow uppercase border-b-4 border-flag-green pb-4">Termos da Campanha</h3>
+            <h3 class="font-brutal text-3xl md:text-4xl mb-6 text-flag-blue uppercase border-b-4 border-black pb-4 pr-12">Termos da Campanha</h3>
             
-            <div class="font-body text-sm space-y-4 overflow-y-auto pr-4 flex-1 custom-scrollbar">
-                <p class="font-bold text-lg border-l-4 border-flag-blue pl-3">Chegou a hora de você mostrar que joga o jogo do longo prazo com AUVP e conseguir seu novo manto. Venha participar da campanha Camisa BR x AUVP.</p>
-                <div class="bg-neon-yellow p-3 text-black font-bold brutal-border">⚠️ Edição de Colecionador: O estoque é extremamente limitado e a distribuição será feita por ordem de inscrição. Uma vez esgotado, não teremos reposição.</div>
-                <p class="font-bold text-neon-yellow pt-2">Pra garantir sua camiseta vintage do Brasil, você precisa cumprir o combo completo:</p>
-                <ul class="list-disc pl-5 space-y-2">
-                    <li>Débito automático ativo na sua conta AUVP Capital (Água, Luz, Internet, Telefone, IPTU). Não cadastre os débitos automáticos pelos sites das concessionárias. Cadastre pelo app BTG Banking.</li>
-                    <li>Pagamento de algum streaming/assinatura MENSAL ativo no seu cartão de crédito AUVP Capital (Spotify, Total Pass, Gym Pass, Kindle, Deezer, Netflix, YouTube, HBO, Amazon Music, Amazon Prime, Globo Play, Pet Love);</li>
-                    <li>Open Finance ativo e com no mínimo 80% do patrimônio alocado com AUVP;</li>
-                    <li>Preencher o formulário para garantir sua participação na campanha.</li>
+            <div class="font-body text-base space-y-4 overflow-y-auto pr-4 flex-1 custom-scrollbar text-gray-800">
+                <p class="font-bold text-lg border-l-4 border-flag-blue pl-3 text-black">Chegou a hora de você mostrar que joga o jogo do longo prazo com AUVP e conseguir seu novo manto. Venha participar da campanha Camisa BR x AUVP.</p>
+                
+                <div class="bg-neon-yellow p-3 text-black font-bold brutal-border text-sm md:text-base">
+                    ⚠️ Edição de Colecionador: O estoque é extremamente limitado e a distribuição será feita por ordem de inscrição. Uma vez esgotado, não teremos reposição.
+                </div>
+                
+                <p class="font-bold text-flag-blue pt-2 uppercase">Pra garantir sua camiseta vintage do Brasil, você precisa cumprir o combo completo:</p>
+                <ul class="list-disc pl-5 space-y-2 text-sm md:text-base">
+                    <li><strong class="text-black">Débito automático ativo</strong> na sua conta AUVP Capital (Água, Luz, Internet, Telefone, IPTU). Não cadastre os débitos automáticos pelos sites das concessionárias. Cadastre pelo app BTG Banking.</li>
+                    <li><strong class="text-black">Pagamento de algum streaming/assinatura MENSAL</strong> ativo no seu cartão de crédito AUVP Capital (Spotify, Total Pass, Gym Pass, Kindle, Deezer, Netflix, YouTube, HBO, Amazon Music, Amazon Prime, Globo Play, Pet Love);</li>
+                    <li><strong class="text-black">Open Finance ativo</strong> e com no mínimo 80% do patrimônio alocado com AUVP;</li>
+                    <li><strong class="text-black">Preencher o formulário</strong> para garantir sua participação na campanha.</li>
                 </ul>
-                <p class="text-gray-400 mt-4">Obs: É possível cadastrar contas em nome de terceiros também. Precisa de ajuda? <a href="https://api.whatsapp.com/send?phone=556240150505&text=Vai%20brasa!" target="_blank" class="underline text-flag-green">Chama o suporte!</a></p>
+                
+                <div class="bg-gray-100 p-4 brutal-border mt-4">
+                    <p class="text-sm font-bold text-gray-700">Obs: É possível cadastrar contas em nome de terceiros também.</p>
+                    <p class="text-sm font-bold text-black mt-2">Precisa de ajuda? <a href="https://api.whatsapp.com/send?phone=556240150505&text=Vai%20brasa!" target="_blank" class="underline text-flag-green hover:text-flag-blue transition-colors">Chama o suporte!</a></p>
+                </div>
             </div>
 
-            <button id="accept-terms-btn" class="w-full bg-flag-green text-white font-brutal text-2xl py-3 mt-6 brutal-border-white hover:bg-white hover:text-black transition-all uppercase cursor-pointer">
+            <button id="accept-terms-btn" class="w-full bg-flag-green text-white font-brutal text-xl py-3 mt-6 brutal-border shadow-brutal hover:bg-flag-blue hover:text-white hover:-translate-y-1 hover:-translate-x-1 hover:shadow-none transition-all uppercase cursor-pointer">
                 Li, Entendi e Concordo
             </button>
         </div>
@@ -1067,6 +1075,37 @@
 
                 if (!isValid) return;
 
+                // Validação de E-mail Customizada (Garante formato nome@dominio.com)
+                const emailInput = document.querySelector('input[type="email"]');
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(emailInput.value)) {
+                    emailInput.classList.add('input-error');
+                    const originalPlaceholder = emailInput.placeholder;
+                    emailInput.value = '';
+                    emailInput.placeholder = 'E-MAIL INVÁLIDO!';
+                    
+                    setTimeout(() => {
+                        emailInput.classList.remove('input-error');
+                        emailInput.placeholder = originalPlaceholder;
+                    }, 2500);
+                    return;
+                }
+
+                // Validação de WhatsApp Customizada (Mínimo de 14 caracteres: (00) 0000-0000)
+                const whatsappInput = document.getElementById('whatsapp');
+                if (whatsappInput.value.length < 14) {
+                    whatsappInput.classList.add('input-error');
+                    const originalPlaceholder = whatsappInput.placeholder;
+                    whatsappInput.value = '';
+                    whatsappInput.placeholder = 'TELEFONE INVÁLIDO!';
+                    
+                    setTimeout(() => {
+                        whatsappInput.classList.remove('input-error');
+                        whatsappInput.placeholder = originalPlaceholder;
+                    }, 2500);
+                    return;
+                }
+
                 const cpfInput = document.getElementById('cpf');
                 if (!isCPFValid(cpfInput.value)) {
                     cpfInput.classList.add('input-error');
@@ -1123,6 +1162,21 @@
 
             leadForm.addEventListener('submit', (e) => {
                 e.preventDefault();
+
+                // Validação Final de CEP antes do envio
+                const cepInputFinal = document.getElementById('cep');
+                if (cepInputFinal.value.length < 9) {
+                    cepInputFinal.classList.add('input-error');
+                    const originalPlaceholder = cepInputFinal.placeholder;
+                    cepInputFinal.value = '';
+                    cepInputFinal.placeholder = 'CEP INVÁLIDO!';
+                    
+                    setTimeout(() => {
+                        cepInputFinal.classList.remove('input-error');
+                        cepInputFinal.placeholder = originalPlaceholder;
+                    }, 2500);
+                    return;
+                }
                 
                 const btn = leadForm.querySelector('button[type="submit"]');
                 const originalText = btn.innerHTML;
@@ -1164,7 +1218,10 @@
             const acceptTermsBtn = document.getElementById('accept-terms-btn');
             const consentCheckbox = document.getElementById('consent-checkbox');
 
+            let hasReadTerms = false; // Controle de leitura dos termos
+
             function openModal() {
+                hasReadTerms = true; // Marca como lido ao abrir o modal
                 termsModal.classList.remove('hidden');
                 setTimeout(() => {
                     termsModal.classList.remove('opacity-0');
@@ -1196,6 +1253,14 @@
             acceptTermsBtn.addEventListener('click', () => {
                 consentCheckbox.checked = true;
                 closeModal();
+            });
+
+            // Trava de Leitura Obrigatória: Impede de assinalar a checkbox se não tiver lido
+            consentCheckbox.addEventListener('click', (e) => {
+                if (!hasReadTerms) {
+                    e.preventDefault(); // Cancela o check
+                    openModal(); // Abre o pop-up na cara do utilizador
+                }
             });
 
             // --- Máscaras de Inputs ---
