@@ -136,7 +136,7 @@
         .btn-cta {
             font-family: 'Righteous', sans-serif;
             text-transform: uppercase;
-            font-size: 1.5rem; 
+            font-size: 1.8rem; 
             color: #fff;
             background: transparent;
             border: none;
@@ -211,7 +211,7 @@
         .content-box {
             background-color: #fff;
             width: 100%;
-            max-width: 768px; 
+            max-width: 768px; /* mobile/tablet width */
             display: flex;
             flex-direction: column;
             margin: auto; 
@@ -219,7 +219,7 @@
         
         @media (min-width: 1024px) {
             .content-box {
-                max-width: 1200px;
+                max-width: 1024px; /* desktop width */
                 flex-direction: row;
             }
         }
@@ -265,6 +265,18 @@
         .custom-scrollbar::-webkit-scrollbar-thumb {
             background: #009C3B;
         }
+
+        /* Animação da Borda Colorida (Termos da Campanha) */
+        @keyframes borderColorsCycle {
+            0% { border-top-color: #009C3B; }   /* Verde */
+            33% { border-top-color: #ffe600; }  /* Amarelo */
+            66% { border-top-color: #002776; }  /* Azul */
+            100% { border-top-color: #009C3B; } /* Volta pro Verde */
+        }
+        
+        .animate-border-cycle {
+            animation: borderColorsCycle 3s infinite linear;
+        }
     </style>
 </head>
 <body class="font-body text-white">
@@ -281,11 +293,11 @@
 
     <!-- Camada Escura e Chamada Inicial -->
     <div class="overlay" id="intro-overlay">
-        <div class="text-center flex flex-col items-center justify-center z-10" id="intro-content">
-            <h1 class="font-brutal text-6xl md:text-8xl lg:text-9xl mb-4 leading-none tracking-tighter text-transparent" style="-webkit-text-stroke: 2px #fff;">
+        <div class="text-center flex flex-col items-center justify-center z-10 w-full px-2" id="intro-content">
+            <h1 class="font-brutal text-[5.5rem] leading-[0.85] sm:text-[7rem] md:text-8xl lg:text-9xl mb-4 tracking-tighter text-transparent" style="-webkit-text-stroke: 2px #fff;">
                 AUVP <br> <span class="text-flag-green" style="-webkit-text-stroke: 0px;">COPA 26</span>
             </h1>
-            <button id="start-btn" class="btn-cta mt-8">Adquira sua camisa 10</button>
+            <button id="start-btn" class="btn-cta mt-6 md:mt-8">Adquira sua camisa 10</button>
         </div>
     </div>
 
@@ -293,7 +305,7 @@
     <section id="form-section">
         
         <!-- DOBRA 1: O Formulário -->
-        <div class="min-h-screen w-full flex items-center justify-center py-6 px-4 md:py-10">
+        <div class="min-h-screen w-full flex items-center justify-center py-6 px-2 sm:px-4 md:py-10">
             <div class="content-box brutal-border shadow-brutal-yellow transform transition-all duration-700 translate-y-10" id="main-card">
                 
                 <!-- Esquerda: Carrossel de Imagens -->
@@ -319,12 +331,12 @@
                 </div>
 
                 <!-- Direita: Formulário de Coleta -->
-                <div class="w-full lg:w-7/12 bg-white p-5 md:p-8 text-black flex flex-col justify-center z-10">
+                <div class="w-full lg:w-7/12 bg-white p-4 sm:p-5 md:p-8 text-black flex flex-col justify-center z-10">
                     <div class="mb-4 md:mb-6">
-                        <h2 class="font-brutal text-3xl md:text-5xl uppercase leading-none mb-2 text-dark-bg">
+                        <h2 class="font-brutal text-4xl md:text-5xl uppercase leading-none mb-2 text-dark-bg">
                             TORÇA COM A <br><span class="text-flag-blue">AUVP CAPITAL</span>
                         </h2>
-                        <p class="font-body font-bold text-gray-600 text-xs md:text-sm border-l-4 border-flag-green pl-3">
+                        <p class="font-body font-bold text-gray-600 text-xs md:text-sm border-l-4 border-flag-green pl-3 mt-3">
                             Preencha seus dados para receber a camiseta exclusiva da campanha da Copa. Quantidades limitadas.
                         </p>
                     </div>
@@ -466,8 +478,10 @@
         </div>
 
         <!-- DOBRA 2: As Regras de Participação (Fundo Branco) -->
-        <div id="regras-dobra" class="w-full bg-white min-h-screen border-t-[12px] border-neon-yellow px-6 py-16 md:py-24 relative z-10 flex flex-col items-center justify-center">
-            <div class="max-w-4xl w-full text-black">
+        <div id="regras-dobra" class="w-full bg-white min-h-screen border-t-[12px] border-neon-yellow px-6 pt-10 pb-16 md:py-24 relative z-10 flex flex-col items-center justify-start md:justify-center">
+            
+            <!-- A classe max-w-[768px] lg:max-w-[1024px] garante exatamente a mesma largura do formulário acima em todos os dispositivos -->
+            <div class="w-full max-w-[768px] lg:max-w-[1024px] text-black">
                 
                 <h2 class="font-brutal text-5xl md:text-7xl text-flag-green uppercase leading-none mb-6">
                     TERMOS DA <span class="text-flag-blue">CAMPANHA</span>
@@ -512,7 +526,6 @@
                     <p class="text-center mt-10 text-xl text-black font-bold">Precisa de ajuda? <a href="https://api.whatsapp.com/send?phone=556240150505&text=Vai%20brasa!" target="_blank" class="text-flag-green underline hover:text-flag-blue">Chama o suporte!</a></p>
                 </div>
 
-                <!-- Contentor do botão aumentado para dar mais espaço horizontal (max-w-xl) -->
                 <div class="mt-12 text-center max-w-xl mx-auto">
                     <button id="back-to-form-btn" class="w-full bg-flag-blue text-white font-brutal text-2xl md:text-3xl py-3 md:py-4 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
                         Voltar para o Formulário
@@ -601,7 +614,7 @@
                 }, 300);
             });
 
-            // --- Lógica de Scroll para as Regras ---
+            // --- Lógica de Scroll para as Regras e Animação de Borda ---
             const scrollToRulesBtn = document.getElementById('scroll-to-rules');
             const rulesFold = document.getElementById('regras-dobra');
             const backToFormBtn = document.getElementById('back-to-form-btn');
@@ -619,6 +632,21 @@
                     behavior: 'smooth'
                 });
             });
+
+            // Observador para ativar a animação da borda colorida apenas quando estiver na seção de termos
+            const observerDobra2 = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-border-cycle');
+                    } else {
+                        entry.target.classList.remove('animate-border-cycle');
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            if(rulesFold) {
+                observerDobra2.observe(rulesFold);
+            }
 
             // --- Lógica do Carrossel ---
             const slides = document.querySelectorAll('.carousel-slide');
@@ -670,7 +698,6 @@
             const stepCounter = document.getElementById('step-counter');
 
             nextStepBtn.addEventListener('click', () => {
-                // Valida os campos da Etapa 1
                 const inputsStep1 = step1.querySelectorAll('input[required]');
                 let isValid = true;
                 
@@ -683,7 +710,6 @@
 
                 if (!isValid) return;
 
-                // Validação de CPF customizada antes de avançar
                 const cpfInput = document.getElementById('cpf');
                 if (!isCPFValid(cpfInput.value)) {
                     cpfInput.classList.add('input-error');
@@ -698,7 +724,6 @@
                     return;
                 }
 
-                // Avança para a Etapa 2 manipulando opacidade e visibilidade no grid
                 step1.classList.remove('opacity-100', 'visible', 'z-10');
                 step1.classList.add('opacity-0', 'invisible', 'z-0');
                 
@@ -710,7 +735,6 @@
             });
 
             backStepBtn.addEventListener('click', () => {
-                // Volta para a Etapa 1
                 step2.classList.remove('opacity-100', 'visible', 'z-10');
                 step2.classList.add('opacity-0', 'invisible', 'z-0');
                 
@@ -737,7 +761,6 @@
                     btn.classList.remove('bg-gray-400', 'text-black', 'pointer-events-none');
                     leadForm.reset();
 
-                    // Reseta para a Etapa 1 após envio bem-sucedido
                     step2.classList.add('hidden');
                     step1.classList.remove('hidden');
                     stepTitle.innerHTML = '1. Dados Pessoais';
@@ -829,7 +852,7 @@
                 e.target.value = !x[2] ? x[1] : x[1] + '-' + x[2];
             });
 
-            // --- API de CEP (ViaCEP - Alternativa Client-Side para API Correios) ---
+            // --- API de CEP ---
             cepInput.addEventListener('blur', async function (e) {
                 const cepText = e.target.value.replace(/\D/g, '');
                 if (cepText.length === 8) {
@@ -839,13 +862,11 @@
                         const data = await res.json();
                         
                         if (!data.erro) {
-                            // Limita os dados trazidos pela API em 40 caracteres preenchendo os inputs
                             document.getElementById('logradouro').value = (data.logradouro || '').substring(0, 40);
                             document.getElementById('bairro').value = (data.bairro || '').substring(0, 40);
                             document.getElementById('cidade').value = (data.localidade || '').substring(0, 40);
                             document.getElementById('uf').value = (data.uf || '').substring(0, 2);
                             
-                            // Foca no número para o usuário não perder tempo
                             document.getElementById('numero').focus();
                         }
                     } catch (err) {
