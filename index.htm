@@ -31,6 +31,7 @@
                         'brutal-white': '8px 8px 0px 0px rgba(255,255,255,1)',
                         'brutal-green': '8px 8px 0px 0px #009C3B',
                         'brutal-yellow': '8px 8px 0px 0px #ffe600',
+                        'brutal-blue': '8px 8px 0px 0px #002776',
                     }
                 }
             }
@@ -42,19 +43,19 @@
         body, html {
             margin: 0;
             padding: 0;
-            height: 100%;
             background-color: #000;
             overflow-x: hidden;
+            scroll-behavior: smooth; /* Rolamento suave nativo */
         }
 
-        /* Container do Vídeo */
+        /* Container do Vídeo Fixo no Fundo */
         .video-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
-            z-index: 1;
+            height: 100vh;
+            z-index: 0; 
             overflow: hidden;
             background-color: #000;
         }
@@ -70,27 +71,18 @@
             pointer-events: none;
             filter: grayscale(20%) contrast(120%);
         }
-
-        /* Overlay Preto */
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.65); 
-            z-index: 2;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: background 0.8s ease, backdrop-filter 0.8s ease;
+        
+        /* Novo Overlay Fixo com suporte a Blur dinâmico */
+        .fixed-bg-overlay {
+            background-color: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(0px);
+            -webkit-backdrop-filter: blur(0px);
+            transition: backdrop-filter 0.8s ease, -webkit-backdrop-filter 0.8s ease;
         }
-
-        /* Classe adicionada dinamicamente para o efeito de blur */
-        .overlay-blur {
-            background: rgba(0, 0, 0, 0.5); 
-            backdrop-filter: blur(15px); 
-            -webkit-backdrop-filter: blur(15px); 
+        
+        .fixed-bg-overlay.with-blur {
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
         }
 
         /* Elementos Brutalistas */
@@ -174,39 +166,6 @@
             transform: scale(1.05);
         }
 
-        /* Animações e Transições */
-        .fade-out {
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease;
-        }
-
-        #form-section, #thank-you-section {
-            opacity: 0;
-            pointer-events: none;
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 5;
-            overflow-y: auto;
-            transition: opacity 0.5s ease;
-            display: block; 
-        }
-        
-        #thank-you-section {
-            display: flex;
-            align-items: flex-start;
-            justify-content: center;
-            padding: 2rem 1rem;
-        }
-
-        #form-section.fade-in, #thank-you-section.fade-in {
-            opacity: 1 !important;
-            pointer-events: auto !important;
-        }
-
         /* Container do Formulário e Carrossel */
         .content-box {
             background-color: #fff;
@@ -230,13 +189,13 @@
             }
         }
 
-        /* Noise Texture */
+        /* Noise Texture Global */
         .noise {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100%;
+            height: 100vh;
             pointer-events: none;
             z-index: 50;
             opacity: 0.05;
@@ -266,16 +225,95 @@
             background: #009C3B;
         }
 
-        /* Animação da Borda Colorida (Termos da Campanha) */
-        @keyframes borderColorsCycle {
-            0% { border-top-color: #009C3B; }   /* Verde */
-            33% { border-top-color: #ffe600; }  /* Amarelo */
-            66% { border-top-color: #002776; }  /* Azul */
-            100% { border-top-color: #009C3B; } /* Volta pro Verde */
+        /* ----- WIDGET WHATSAPP ----- */
+        :root {
+            --piggy-bottom-pos: 30px;
+            --piggy-right-pos: 30px;
+            --piggy-size: 65px;
         }
-        
-        .animate-border-cycle {
-            animation: borderColorsCycle 3s infinite linear;
+
+        @keyframes slideUpEntrance {
+            from { transform: translateY(150px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes floatPiggy {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        #whatsapp-widget-container {
+            position: fixed;
+            bottom: var(--piggy-bottom-pos);
+            right: var(--piggy-right-pos);
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            pointer-events: none;
+            animation: slideUpEntrance 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+        }
+
+        .whatsapp-bubble {
+            background-color: #fff;
+            padding: 10px 14px;
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            color: #000;
+            max-width: 220px;
+            margin-bottom: 15px;
+            pointer-events: auto;
+            transition: transform 0.2s ease;
+            transform-origin: bottom right;
+            transform: scale(0);
+        }
+
+        #whatsapp-widget-container:hover .whatsapp-bubble {
+            transform: scale(1);
+        }
+
+        .whatsapp-icon-btn {
+            width: var(--piggy-size);
+            height: var(--piggy-size);
+            background-color: #009C3B;
+            border: 3px solid #000;
+            box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            animation: floatPiggy 3s ease-in-out infinite;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .whatsapp-icon-btn:hover {
+            background-color: #ffe600;
+            transform: translateY(-2px);
+        }
+
+        .whatsapp-icon-btn svg {
+            width: 55%;
+            height: 55%;
+            fill: #fff;
+            transition: fill 0.2s ease;
+        }
+
+        .whatsapp-icon-btn:hover svg {
+            fill: #000;
+        }
+
+        @media (max-width: 480px) {
+            :root {
+                --piggy-bottom-pos: 20px;
+                --piggy-right-pos: 20px;
+                --piggy-size: 55px;
+            }
+            .whatsapp-bubble { max-width: calc(100vw - 50px); font-size: 12px; }
         }
     </style>
 </head>
@@ -283,263 +321,416 @@
 
     <div class="noise"></div>
 
-    <!-- Background Video -->
+    <!-- Background Video Fixado -->
     <div class="video-container">
-        <!-- Vídeo MP4 direto do GitHub -->
         <video autoplay loop muted playsinline id="bgVideo">
             <source src="https://raw.githubusercontent.com/design-auvp/camisa10/main/CAMISETA%20BRASIL%20-AUVP%20%20(2).mp4" type="video/mp4">
         </video>
     </div>
+    
+    <!-- Novo Overlay Escuro Fixo (sempre presente) -->
+    <div id="fixed-overlay" class="fixed inset-0 fixed-bg-overlay z-[1] pointer-events-none"></div>
 
-    <!-- Camada Escura e Chamada Inicial -->
-    <div class="overlay" id="intro-overlay">
-        <div class="text-center flex flex-col items-center justify-center z-10 w-full px-2" id="intro-content">
-            <h1 class="font-brutal text-[5.5rem] leading-[0.85] sm:text-[7rem] md:text-8xl lg:text-9xl mb-4 tracking-tighter text-transparent" style="-webkit-text-stroke: 2px #fff;">
-                AUVP <br> <span class="text-flag-green" style="-webkit-text-stroke: 0px;">COPA 26</span>
-            </h1>
-            <button id="start-btn" class="btn-cta mt-6 md:mt-8">Adquira sua camisa 10</button>
-        </div>
-    </div>
+    <!-- MAIN WRAPPER (Rolável por cima do vídeo) -->
+    <main class="relative z-10">
 
-    <!-- Seção de Formulário e Carrossel -->
-    <section id="form-section">
-        
-        <!-- DOBRA 1: O Formulário -->
-        <div class="min-h-screen w-full flex items-center justify-center py-6 px-2 sm:px-4 md:py-10">
-            <div class="content-box brutal-border shadow-brutal-yellow transform transition-all duration-700 translate-y-10" id="main-card">
-                
-                <!-- Esquerda: Carrossel de Imagens -->
-                <div class="w-full lg:w-5/12 relative bg-dark-bg h-[30vh] md:h-[40vh] lg:h-auto lg:min-h-[700px]">
-                    <div class="absolute top-4 left-4 z-20 bg-neon-yellow text-black font-brutal text-xl px-3 py-1 brutal-border shadow-brutal">
-                        LIMITADO
-                    </div>
-                    
-                    <div class="absolute inset-0 w-full h-full overflow-hidden bg-black" id="carousel-container">
-                        <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/DSC00457.jpg" class="w-full h-full object-cover object-top block lg:hidden" alt="Camiseta AUVP 10 - Mobile">
-                        <div class="hidden lg:block w-full h-full">
-                            <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/DSC00262%20(1).jpg" class="carousel-slide active" alt="Camiseta AUVP 10 - Foto 1">
-                            <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/DSC00319.jpg" class="carousel-slide" alt="Camiseta AUVP 10 - Foto 2">
-                        </div>
-                    </div>
-
-                    <button id="prev-btn" class="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white text-black w-10 h-10 items-center justify-center brutal-border hover:bg-flag-green hover:text-white transition-colors z-20 font-brutal text-xl">
-                        &lt;
-                    </button>
-                    <button id="next-btn" class="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white text-black w-10 h-10 items-center justify-center brutal-border hover:bg-flag-green hover:text-white transition-colors z-20 font-brutal text-xl">
-                        &gt;
-                    </button>
-                </div>
-
-                <!-- Direita: Formulário de Coleta -->
-                <div class="w-full lg:w-7/12 bg-white p-4 sm:p-5 md:p-8 text-black flex flex-col justify-center z-10">
-                    <div class="mb-4 md:mb-6">
-                        <h2 class="font-brutal text-4xl md:text-5xl uppercase leading-none mb-2 text-dark-bg">
-                            TORÇA COM A <br><span class="text-flag-blue">AUVP CAPITAL</span>
-                        </h2>
-                        <p class="font-body font-bold text-gray-600 text-xs md:text-sm border-l-4 border-flag-green pl-3 mt-3">
-                            Preencha seus dados para receber a camiseta exclusiva da campanha da Copa. Quantidades limitadas.
-                        </p>
-                    </div>
-
-                    <form id="lead-form" class="space-y-3">
-                        
-                        <!-- Indicador de Etapas -->
-                        <div class="flex items-center justify-between mb-2 border-b-4 border-black pb-2">
-                            <h3 id="step-title" class="font-brutal text-xl md:text-2xl text-flag-blue uppercase">1. Dados Pessoais</h3>
-                            <span id="step-counter" class="font-brutal bg-neon-yellow text-black px-2 py-1 brutal-border text-sm">ETAPA 1/2</span>
-                        </div>
-
-                        <!-- Grid wrapper para sobrepor as etapas sem mudar a altura -->
-                        <div class="grid relative items-start">
-                            
-                            <!-- ETAPA 1: Dados Pessoais -->
-                            <div id="step-1" class="col-start-1 row-start-1 space-y-3 transition-all duration-300 opacity-100 visible z-10">
-                                
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                    <div class="md:col-span-2">
-                                        <label class="block font-brutal text-sm md:text-base mb-1 uppercase">Nome Completo</label>
-                                        <input type="text" required placeholder="DIGITE SEU NOME" class="input-brutal">
-                                    </div>
-                                    <div>
-                                        <label class="block font-brutal text-sm md:text-base mb-1 uppercase text-flag-blue">CPF *</label>
-                                        <input type="text" id="cpf" maxlength="14" required placeholder="000.000.000-00" class="input-brutal font-body">
-                                    </div>
-                                    <div>
-                                        <label class="block font-brutal text-sm md:text-base mb-1 uppercase">WhatsApp</label>
-                                        <input type="tel" id="whatsapp" maxlength="15" required placeholder="(00) 00000-0000" class="input-brutal">
-                                    </div>
-                                    <div class="md:col-span-2">
-                                        <label class="block font-brutal text-sm md:text-base mb-1 uppercase">E-mail</label>
-                                        <input type="email" required placeholder="SEU@EMAIL.COM" class="input-brutal">
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <label class="block font-brutal text-sm md:text-base mb-1 uppercase mt-2">Tamanho da Camiseta</label>
-                                    <div class="grid grid-cols-5 gap-2">
-                                        <label class="cursor-pointer">
-                                            <input type="radio" name="size" value="P" class="peer sr-only" required>
-                                            <div class="w-full text-center py-2 brutal-border bg-gray-100 font-brutal text-lg peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal-sm hover:bg-gray-200 transition-all">P</div>
-                                        </label>
-                                        <label class="cursor-pointer">
-                                            <input type="radio" name="size" value="M" class="peer sr-only">
-                                            <div class="w-full text-center py-2 brutal-border bg-gray-100 font-brutal text-lg peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal-sm hover:bg-gray-200 transition-all">M</div>
-                                        </label>
-                                        <label class="cursor-pointer">
-                                            <input type="radio" name="size" value="G" class="peer sr-only">
-                                            <div class="w-full text-center py-2 brutal-border bg-gray-100 font-brutal text-lg peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal-sm hover:bg-gray-200 transition-all">G</div>
-                                        </label>
-                                        <label class="cursor-pointer">
-                                            <input type="radio" name="size" value="GG" class="peer sr-only">
-                                            <div class="w-full text-center py-2 brutal-border bg-gray-100 font-brutal text-lg peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal-sm hover:bg-gray-200 transition-all">GG</div>
-                                        </label>
-                                        <label class="cursor-pointer">
-                                            <input type="radio" name="size" value="XG" class="peer sr-only">
-                                            <div class="w-full text-center py-2 brutal-border bg-gray-100 font-brutal text-lg peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal-sm hover:bg-gray-200 transition-all">XG</div>
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <button type="button" id="next-step-btn" class="w-full bg-flag-blue text-white font-brutal text-xl md:text-2xl py-3 mt-4 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
-                                    PRÓXIMO PASSO &gt;
-                                </button>
-                            </div>
-
-                            <!-- ETAPA 2: Endereço e Confirmação -->
-                            <div id="step-2" class="col-start-1 row-start-1 space-y-3 transition-all duration-300 opacity-0 invisible z-0">
-                                
-                                <div class="pt-1">
-                                    <div class="flex justify-end mb-2 h-4">
-                                        <span id="cep-loading" class="text-xs text-flag-green hidden font-body font-bold">Buscando CEP...</span>
-                                    </div>
-                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 mb-3">
-                                        <div class="md:col-span-4 relative">
-                                            <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">CEP *</label>
-                                            <input type="text" id="cep" maxlength="9" required placeholder="00000-000" class="input-brutal pr-8">
-                                            <svg class="w-4 h-4 absolute right-3 top-[2.2rem] text-gray-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-                                        </div>
-                                        <div class="md:col-span-6">
-                                            <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">Logradouro *</label>
-                                            <input type="text" id="logradouro" maxlength="40" required placeholder="Rua, Avenida, etc" class="input-brutal">
-                                        </div>
-                                        <div class="md:col-span-2">
-                                            <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">Número *</label>
-                                            <input type="text" id="numero" maxlength="40" required placeholder="123" class="input-brutal">
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
-                                        <div class="md:col-span-3">
-                                            <label class="block font-brutal text-xs mb-1 uppercase">Complemento</label>
-                                            <input type="text" id="complemento" maxlength="40" placeholder="Apto, Bloco (Opcional)" class="input-brutal">
-                                        </div>
-                                        <div class="md:col-span-3">
-                                            <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">Bairro *</label>
-                                            <input type="text" id="bairro" maxlength="40" required placeholder="Bairro" class="input-brutal">
-                                        </div>
-                                        <div class="md:col-span-4">
-                                            <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">Cidade *</label>
-                                            <input type="text" id="cidade" maxlength="40" required placeholder="Cidade" class="input-brutal">
-                                        </div>
-                                        <div class="md:col-span-2">
-                                            <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">UF *</label>
-                                            <input type="text" id="uf" maxlength="2" required placeholder="UF" class="input-brutal uppercase text-center px-1">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="flex items-start gap-2 md:gap-3 mt-4 bg-gray-50 p-3 brutal-border">
-                                    <input type="checkbox" id="consent-checkbox" required class="mt-0.5 w-5 h-5 md:w-6 md:h-6 cursor-pointer accent-[#009C3B]">
-                                    <label for="consent-checkbox" class="font-body text-xs text-gray-700 leading-tight cursor-pointer">
-                                        Aceito ter meus dados coletados para receber comunicações, brindes e campanhas futuras da AUVP. Li e concordo com os 
-                                        <span id="open-terms" class="underline font-bold text-flag-blue hover:text-flag-green transition-colors cursor-pointer">Termos da Campanha</span>.
-                                    </label>
-                                </div>
-
-                                <div class="flex gap-2 md:gap-3 mt-4">
-                                    <button type="button" id="back-step-btn" class="w-1/3 bg-white text-black font-brutal text-lg py-3 brutal-border shadow-brutal hover:bg-gray-200 hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
-                                        &lt; Voltar
-                                    </button>
-                                    <button type="submit" class="w-2/3 bg-flag-green text-white font-brutal text-xl md:text-2xl py-3 brutal-border shadow-brutal hover:bg-flag-blue hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
-                                        CONCLUIR
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="text-center mt-3 pt-2">
-                            <button type="button" id="scroll-to-rules" class="underline font-bold text-flag-blue hover:text-flag-green transition-colors cursor-pointer font-body text-xs md:text-sm">
-                                Conheça as condições para participar!
-                            </button>
-                        </div>
-                    </form>
-                </div>
+        <!-- DOBRA 0: Chamada Inicial (Fundo transparente, pois o escuro agora é o overlay fixo) -->
+        <div class="min-h-screen w-full flex items-center justify-center" id="intro-wrapper">
+            <div class="text-center flex flex-col items-center justify-center px-2" id="intro-content">
+                <h1 class="font-brutal text-[5.5rem] leading-[0.85] sm:text-[7rem] md:text-8xl lg:text-9xl mb-4 tracking-tighter text-transparent" style="-webkit-text-stroke: 2px #fff;">
+                    AUVP <br> <span class="text-flag-green" style="-webkit-text-stroke: 0px;">COPA 26</span>
+                </h1>
+                <button id="start-btn" class="btn-cta mt-6 md:mt-8">Adquira sua camisa 10</button>
             </div>
         </div>
 
-        <!-- DOBRA 2: As Regras de Participação (Fundo Branco) -->
-        <div id="regras-dobra" class="w-full bg-white min-h-screen border-t-[12px] border-neon-yellow px-6 pt-10 pb-16 md:py-24 relative z-10 flex flex-col items-center justify-start md:justify-center">
+        <!-- DOBRA 1: As Regras de Participação (Agora vem antes do formulário) -->
+        <!-- Borda na parte inferior (border-b-[12px]) para separar dos Termos para o Formulário -->
+        <div id="regras-dobra" class="w-full bg-white min-h-screen border-b-[12px] border-flag-green px-4 sm:px-6 pt-16 pb-16 md:py-24 relative flex flex-col items-center justify-start md:justify-center" style="transition: border-bottom-color 0.1s ease-out;">
             
-            <!-- A classe max-w-[768px] lg:max-w-[1024px] garante exatamente a mesma largura do formulário acima em todos os dispositivos -->
             <div class="w-full max-w-[768px] lg:max-w-[1024px] text-black">
                 
-                <h2 class="font-brutal text-5xl md:text-7xl text-flag-green uppercase leading-none mb-6">
-                    TERMOS DA <span class="text-flag-blue">CAMPANHA</span>
+                <h2 class="font-brutal text-5xl md:text-7xl text-flag-green uppercase leading-none mb-6 text-center md:text-left">
+                    CHECKLIST PARA <span class="text-flag-blue">GOLEAR</span>
                 </h2>
                 
                 <div class="font-body text-gray-800 text-base md:text-lg space-y-6">
-                    <p class="font-bold text-dark-bg text-xl border-l-4 border-flag-blue pl-4">A Copa chegou… e a AUVP decidiu jogar junto.</p>
+                    <p class="font-bold text-dark-bg text-xl md:text-2xl border-l-4 border-flag-blue pl-4">
+                        Chegou a hora de você mostrar que joga o jogo do longo prazo com AUVP e conseguir seu novo manto. Venha participar da campanha <strong class="text-flag-blue">Camisa BR x AUVP</strong>.
+                    </p>
                     
-                    <p>A Copa sempre foi sobre nação, disputa e pertencimento. E esse ano, a gente resolveu levar isso pra prática. Criamos a campanha <strong class="text-flag-blue">Camisa BR x AUVP</strong>, e alguns de vocês poderão levar pra casa esse presente.</p>
+                    <p class="mt-8 font-bold">Aqui estão os passos que você deve seguir para concorrer à camiseta vintage exclusiva da AUVP. Cada um deles deve ser devidamente cumprido e comprovado para garanti-la.</p>
                     
-                    <p class="font-bold text-dark-bg uppercase mt-10">Pra garantir sua camiseta vintage do Brasil, você precisa cumprir o combo completo:</p>
-                    
-                    <!-- Grid do Passo a Passo Brutalista -->
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4 mb-8">
-                        <div class="brutal-border p-5 bg-gray-50 transition-all duration-300 shadow-brutal hover:bg-flag-blue hover:text-white group">
-                            <h3 class="font-brutal text-2xl text-flag-blue mb-2 tracking-wide group-hover:text-white transition-colors">1. DÉBITO AUTOMÁTICO</h3>
-                            <p class="text-sm">Débito automático ativo na sua conta AUVP Capital (Água, Luz, Internet, Telefone, IPTU) (<a href="https://api.whatsapp.com/send?phone=556240150505&text=Vai%20brasa!" target="_blank" class="underline text-flag-green font-bold group-hover:text-neon-yellow">veja aqui tutorial para ativar o débito automático</a>).</p>
+                    <!-- Grid do Passo a Passo Brutalista em Coluna Única -->
+                    <div class="flex flex-col gap-6 mt-6 mb-8">
+                        
+                        <!-- 1. Débito Automático -->
+                        <div class="brutal-border p-6 md:p-8 bg-gray-50 shadow-brutal hover:bg-flag-blue hover:text-white transition-all duration-300 group">
+                            <h3 class="font-brutal text-2xl md:text-4xl text-flag-blue mb-4 tracking-wide uppercase group-hover:text-neon-yellow transition-colors">1. Débito Automático Ativo</h3>
+                            <p class="text-base md:text-lg text-gray-800 mb-6 group-hover:text-white transition-colors">
+                                Débito automático ativo na sua conta AUVP Capital (Água, Luz, Internet, Telefone, IPTU). 
+                                <span class="font-bold">Não cadastre os débitos automáticos pelos sites das concessionárias. Cadastre pelo app BTG Banking.</span>
+                            </p>
+                            <button onclick="openTutorial('modal-debito')" class="w-full md:w-auto bg-flag-blue text-white font-brutal text-base md:text-lg px-6 py-3 brutal-border shadow-brutal group-hover:bg-neon-yellow group-hover:text-black hover:!bg-flag-green hover:!text-white hover:-translate-y-1 hover:-translate-x-1 hover:shadow-none transition-all uppercase cursor-pointer text-center">
+                                Tutorial para ativar débito automático
+                            </button>
                         </div>
-                        <div class="brutal-border p-5 bg-gray-50 transition-all duration-300 shadow-brutal hover:bg-flag-blue hover:text-white group">
-                            <h3 class="font-brutal text-2xl text-flag-blue mb-2 tracking-wide group-hover:text-white transition-colors">2. ASSINATURAS / STREAMING</h3>
-                            <p class="text-sm">Pagamento de algum streaming/assinatura MENSAL ativo no seu cartão de crédito AUVP Capital (Spotify, Total Pass, Gym Pass, Kindle, Deezer, Netflix, YouTube, HBO, Amazon Music, Amazon Prime, Globo Play, Pet Love).</p>
+
+                        <!-- 2. Assinatura Mensal -->
+                        <div class="brutal-border p-6 md:p-8 bg-gray-50 shadow-brutal hover:bg-flag-blue hover:text-white transition-all duration-300 group">
+                            <h3 class="font-brutal text-2xl md:text-4xl text-flag-blue mb-4 tracking-wide uppercase group-hover:text-neon-yellow transition-colors">2. Assinatura Mensal</h3>
+                            <p class="text-base md:text-lg text-gray-800 mb-6 group-hover:text-white transition-colors">Ter o pagamento de algum streaming/assinatura MENSAL ativo no seu cartão de crédito AUVP Capital.</p>
+                            
+                            <!-- Tags das Plataformas -->
+                            <div class="flex flex-wrap gap-2 md:gap-3">
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Spotify</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Total Pass</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Gym Pass</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Kindle</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Deezer</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Netflix</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">YouTube</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">HBO</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Amazon Music</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Amazon Prime</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Globo Play</span>
+                                <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Pet Love</span>
+                            </div>
                         </div>
-                        <div class="brutal-border p-5 bg-gray-50 transition-all duration-300 shadow-brutal hover:bg-flag-blue hover:text-white group">
-                            <h3 class="font-brutal text-2xl text-flag-blue mb-2 tracking-wide group-hover:text-white transition-colors">3. OPEN FINANCE</h3>
-                            <p class="text-sm">Open Finance ativo e com 80% do patrimônio com a gente (<a href="https://api.whatsapp.com/send?phone=556240150505&text=Vai%20brasa!" target="_blank" class="underline text-flag-green font-bold group-hover:text-neon-yellow">veja aqui tutorial para ativar o open finance</a>).</p>
+
+                        <!-- 3. Open Finance -->
+                        <div class="brutal-border p-6 md:p-8 bg-gray-50 shadow-brutal hover:bg-flag-blue hover:text-white transition-all duration-300 group">
+                            <h3 class="font-brutal text-2xl md:text-4xl text-flag-blue mb-4 tracking-wide uppercase group-hover:text-neon-yellow transition-colors">3. Open Finance Ativo</h3>
+                            <p class="text-base md:text-lg text-gray-800 mb-6 group-hover:text-white transition-colors">Open Finance ativo e com no mínimo 80% do patrimônio alocado com AUVP.</p>
+                            
+                            <button onclick="openTutorial('modal-openfinance')" class="w-full md:w-auto bg-flag-blue text-white font-brutal text-base md:text-lg px-6 py-3 brutal-border shadow-brutal group-hover:bg-neon-yellow group-hover:text-black hover:!bg-flag-green hover:!text-white hover:-translate-y-1 hover:-translate-x-1 hover:shadow-none transition-all uppercase cursor-pointer text-center">
+                                Tutorial para ativar Open Finance
+                            </button>
                         </div>
-                        <div class="brutal-border p-5 bg-gray-50 transition-all duration-300 shadow-brutal hover:bg-flag-blue hover:text-white group">
-                            <h3 class="font-brutal text-2xl text-flag-blue mb-2 tracking-wide group-hover:text-white transition-colors">4. PREENCHER O FORMULÁRIO</h3>
-                            <p class="text-sm">Preencher o formulário acima para garantir sua participação na campanha!</p>
+
+                        <!-- 4. Se inscrever -->
+                        <div class="brutal-border p-6 md:p-8 bg-gray-50 shadow-brutal hover:bg-flag-blue hover:text-white transition-all duration-300 group">
+                            <h3 class="font-brutal text-2xl md:text-4xl text-flag-blue mb-4 tracking-wide uppercase group-hover:text-neon-yellow transition-colors">4. Se Inscrever na Campanha</h3>
+                            <p class="text-base md:text-lg text-gray-800 group-hover:text-white transition-colors">Tenha o <button onclick="document.getElementById('form-section').scrollIntoView({ behavior: 'smooth' });" class="underline text-flag-green font-bold hover:text-black group-hover:text-neon-yellow group-hover:hover:text-white cursor-pointer bg-transparent border-none p-0 text-base md:text-lg transition-colors">formulário</button> devidamente preenchido para garantir sua participação na campanha.</p>
                         </div>
                     </div>
 
                     <p class="border-l-4 border-gray-400 pl-4 text-sm text-gray-500"><strong>Obs:</strong> É possível cadastrar contas em nome de terceiros também.</p>
                     
-                    <div class="bg-flag-blue p-5 brutal-border mt-8 text-white shadow-brutal">
-                        <p class="mb-2">⚠️ <strong>Importante.</strong> Os estoques são LIMITADOS, por ordem de inscrição (que serão abertas no dia 4 de maio). Acabou, acabou.</p>
-                        <hr class="border-t border-white/20 my-4">
-                        <p class="mb-2">👀 <strong>“Ah, mas eu já tenho tudo isso…”</strong></p>
-                        <p>Se você já está com tudo ativo e não consegue participar da campanha por regra de elegibilidade… Relaxa. A gente pensou nisso também. Vamos liberar um lote limitado de camisetas para compra. Iremos divulgar o link em breve.</p>
+                    <div class="mt-12 text-center max-w-xl mx-auto">
+                        <!-- Botão atualizado para descer para o formulário -->
+                        <button id="go-to-form-btn" class="w-full bg-flag-blue text-white font-brutal text-2xl md:text-3xl py-3 md:py-4 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
+                            Ir para o Formulário
+                        </button>
                     </div>
-
-                    <p class="text-center mt-10 text-xl text-black font-bold">Precisa de ajuda? <a href="https://api.whatsapp.com/send?phone=556240150505&text=Vai%20brasa!" target="_blank" class="text-flag-green underline hover:text-flag-blue">Chama o suporte!</a></p>
-                </div>
-
-                <div class="mt-12 text-center max-w-xl mx-auto">
-                    <button id="back-to-form-btn" class="w-full bg-flag-blue text-white font-brutal text-2xl md:text-3xl py-3 md:py-4 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
-                        Voltar para o Formulário
-                    </button>
                 </div>
             </div>
         </div>
-    </section>
 
-    <!-- Seção de Obrigado -->
-    <section id="thank-you-section">
-        <div class="bg-white max-w-2xl w-full brutal-border shadow-brutal-yellow flex flex-col transform transition-all duration-700 translate-y-10 my-auto" id="thank-you-card">
-            
-            <div class="hidden lg:block w-full h-48 md:h-80 border-b-4 border-black overflow-hidden bg-black relative">
+        <!-- DOBRA 2: Seção de Formulário e Carrossel -->
+        <section id="form-section" class="w-full">
+            <div class="min-h-screen w-full flex items-center justify-center py-8 px-5 sm:px-8 md:py-12">
+                <!-- O Formulário Flutuando sobre o fundo limpo -->
+                <div class="content-box brutal-border shadow-brutal-yellow" id="main-card">
+                    
+                    <!-- Esquerda: Carrossel de Imagens -->
+                    <div class="w-full lg:w-5/12 relative bg-dark-bg h-[30vh] md:h-[40vh] lg:h-auto lg:min-h-[700px]">
+                        
+                        <!-- Tooltip 'Limitado' -->
+                        <div class="absolute top-4 left-4 z-30 group cursor-help">
+                            <div class="bg-neon-yellow text-black font-brutal text-xl px-3 py-1 brutal-border shadow-brutal group-hover:bg-flag-green group-hover:text-white transition-colors">
+                                LIMITADO
+                            </div>
+                            <div class="absolute left-0 mt-2 w-72 scale-0 group-hover:scale-100 transition-transform origin-top-left bg-white text-black font-body text-sm p-4 brutal-border shadow-brutal z-40 pointer-events-none">
+                                <strong class="font-brutal text-lg text-flag-blue uppercase block mb-1">Edição de Colecionador</strong>
+                                O estoque é extremamente limitado e a distribuição será feita por ordem de inscrição. Uma vez esgotado, não teremos reposição.
+                            </div>
+                        </div>
+                        
+                        <div class="absolute inset-0 w-full h-full overflow-hidden bg-black" id="carousel-container">
+                            <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/DSC00457.jpg" class="w-full h-full object-cover object-top block lg:hidden" alt="Camiseta AUVP 10 - Mobile">
+                            <div class="hidden lg:block w-full h-full">
+                                <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/DSC00262%20(1).jpg" class="carousel-slide active" alt="Camiseta AUVP 10 - Foto 1">
+                                <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/DSC00319.jpg" class="carousel-slide" alt="Camiseta AUVP 10 - Foto 2">
+                            </div>
+                        </div>
+
+                        <button id="prev-btn" class="hidden lg:flex absolute left-4 top-1/2 -translate-y-1/2 bg-white text-black w-10 h-10 items-center justify-center brutal-border hover:bg-flag-green hover:text-white transition-colors z-20 font-brutal text-xl">
+                            &lt;
+                        </button>
+                        <button id="next-btn" class="hidden lg:flex absolute right-4 top-1/2 -translate-y-1/2 bg-white text-black w-10 h-10 items-center justify-center brutal-border hover:bg-flag-green hover:text-white transition-colors z-20 font-brutal text-xl">
+                            &gt;
+                        </button>
+                    </div>
+
+                    <!-- Direita: Formulário de Coleta -->
+                    <div class="w-full lg:w-7/12 bg-white p-4 sm:p-5 md:p-8 text-black flex flex-col justify-center z-10">
+                        <div class="mb-4 md:mb-6">
+                            <h2 class="font-brutal text-4xl md:text-5xl uppercase leading-none mb-2 text-dark-bg">
+                                TORÇA COM A <br><span class="text-flag-blue">AUVP CAPITAL</span>
+                            </h2>
+                            <p class="font-body font-bold text-gray-600 text-xs md:text-sm border-l-4 border-flag-green pl-3 mt-3">
+                                Preencha seus dados para receber a camiseta exclusiva da campanha da Copa. Quantidades limitadas.
+                            </p>
+                        </div>
+
+                        <form id="lead-form" class="space-y-3">
+                            
+                            <!-- Indicador de Etapas -->
+                            <div class="flex items-center justify-between mb-2 border-b-4 border-black pb-2">
+                                <h3 id="step-title" class="font-brutal text-xl md:text-2xl text-flag-blue uppercase">1. Dados Pessoais</h3>
+                                <span id="step-counter" class="font-brutal bg-neon-yellow text-black px-2 py-1 brutal-border text-sm">ETAPA 1/2</span>
+                            </div>
+
+                            <!-- Wrapper dinâmico das etapas -->
+                            <div class="relative">
+                                
+                                <!-- ETAPA 1: Dados Pessoais -->
+                                <div id="step-1" class="space-y-3 transition-opacity duration-300 opacity-100">
+                                    
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        <div class="md:col-span-2">
+                                            <label class="block font-brutal text-sm md:text-base mb-1 uppercase">Nome Completo</label>
+                                            <input type="text" required placeholder="DIGITE SEU NOME" class="input-brutal">
+                                        </div>
+                                        <div>
+                                            <label class="block font-brutal text-sm md:text-base mb-1 uppercase text-flag-blue">CPF *</label>
+                                            <input type="text" id="cpf" maxlength="14" required placeholder="000.000.000-00" class="input-brutal font-body">
+                                        </div>
+                                        <div>
+                                            <label class="block font-brutal text-sm md:text-base mb-1 uppercase">WhatsApp</label>
+                                            <input type="tel" id="whatsapp" maxlength="15" required placeholder="(00) 00000-0000" class="input-brutal">
+                                        </div>
+                                        <div class="md:col-span-2">
+                                            <label class="block font-brutal text-sm md:text-base mb-1 uppercase">E-mail</label>
+                                            <input type="email" required placeholder="SEU@EMAIL.COM" class="input-brutal">
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="block font-brutal text-sm md:text-base mb-1 uppercase mt-2">Tamanho da Camiseta</label>
+                                        <div class="grid grid-cols-5 gap-2">
+                                            <label class="cursor-pointer">
+                                                <input type="radio" name="size" value="P" class="peer sr-only" required>
+                                                <div class="w-full text-center py-2 brutal-border bg-gray-100 font-brutal text-lg peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal-sm hover:bg-gray-200 transition-all">P</div>
+                                            </label>
+                                            <label class="cursor-pointer">
+                                                <input type="radio" name="size" value="M" class="peer sr-only">
+                                                <div class="w-full text-center py-2 brutal-border bg-gray-100 font-brutal text-lg peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal-sm hover:bg-gray-200 transition-all">M</div>
+                                            </label>
+                                            <label class="cursor-pointer">
+                                                <input type="radio" name="size" value="G" class="peer sr-only">
+                                                <div class="w-full text-center py-2 brutal-border bg-gray-100 font-brutal text-lg peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal-sm hover:bg-gray-200 transition-all">G</div>
+                                            </label>
+                                            <label class="cursor-pointer">
+                                                <input type="radio" name="size" value="GG" class="peer sr-only">
+                                                <div class="w-full text-center py-2 brutal-border bg-gray-100 font-brutal text-lg peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal-sm hover:bg-gray-200 transition-all">GG</div>
+                                            </label>
+                                            <label class="cursor-pointer">
+                                                <input type="radio" name="size" value="XG" class="peer sr-only">
+                                                <div class="w-full text-center py-2 brutal-border bg-gray-100 font-brutal text-lg peer-checked:bg-flag-green peer-checked:text-white peer-checked:shadow-brutal-sm hover:bg-gray-200 transition-all">XG</div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <button type="button" id="next-step-btn" class="w-full bg-flag-blue text-white font-brutal text-xl md:text-2xl py-3 mt-4 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
+                                        PRÓXIMO PASSO &gt;
+                                    </button>
+                                </div>
+
+                                <!-- ETAPA 2: Endereço e Confirmação -->
+                                <div id="step-2" class="hidden space-y-3 transition-opacity duration-300 opacity-0">
+                                    
+                                    <div class="pt-1">
+                                        <div class="flex justify-end mb-2 h-4">
+                                            <span id="cep-loading" class="text-xs text-flag-green hidden font-body font-bold">Buscando CEP...</span>
+                                        </div>
+                                        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 mb-3">
+                                            <div class="md:col-span-4 relative">
+                                                <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">CEP *</label>
+                                                <input type="text" id="cep" maxlength="9" required placeholder="00000-000" class="input-brutal pr-8">
+                                                <svg class="w-4 h-4 absolute right-3 top-[2.2rem] text-gray-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
+                                            </div>
+                                            <div class="md:col-span-6">
+                                                <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">Logradouro *</label>
+                                                <input type="text" id="logradouro" maxlength="40" required placeholder="Rua, Avenida, etc" class="input-brutal">
+                                            </div>
+                                            <div class="md:col-span-2">
+                                                <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">Número *</label>
+                                                <input type="text" id="numero" maxlength="40" required placeholder="123" class="input-brutal">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+                                            <div class="md:col-span-3">
+                                                <label class="block font-brutal text-xs mb-1 uppercase">Complemento</label>
+                                                <input type="text" id="complemento" maxlength="40" placeholder="Apto, Bloco (Opcional)" class="input-brutal">
+                                            </div>
+                                            <div class="md:col-span-3">
+                                                <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">Bairro *</label>
+                                                <input type="text" id="bairro" maxlength="40" required placeholder="Bairro" class="input-brutal">
+                                            </div>
+                                            <div class="md:col-span-4">
+                                                <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">Cidade *</label>
+                                                <input type="text" id="cidade" maxlength="40" required placeholder="Cidade" class="input-brutal">
+                                            </div>
+                                            <div class="md:col-span-2">
+                                                <label class="block font-brutal text-xs mb-1 uppercase text-flag-blue">UF *</label>
+                                                <input type="text" id="uf" maxlength="2" required placeholder="UF" class="input-brutal uppercase text-center px-1">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-start gap-2 md:gap-3 mt-4 bg-gray-50 p-3 brutal-border">
+                                        <input type="checkbox" id="consent-checkbox" required class="mt-0.5 w-5 h-5 md:w-6 md:h-6 cursor-pointer accent-[#009C3B]">
+                                        <label for="consent-checkbox" class="font-body text-xs text-gray-700 leading-tight cursor-pointer">
+                                            Aceito ter meus dados coletados para receber comunicações, brindes e campanhas futuras da AUVP. Li e concordo com os 
+                                            <span id="open-terms" class="underline font-bold text-flag-blue hover:text-flag-green transition-colors cursor-pointer">Termos da Campanha</span>.
+                                        </label>
+                                    </div>
+
+                                    <div class="flex gap-2 md:gap-3 mt-4">
+                                        <button type="button" id="back-step-btn" class="w-1/3 bg-white text-black font-brutal text-lg py-3 brutal-border shadow-brutal hover:bg-gray-200 hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
+                                            &lt; Voltar
+                                        </button>
+                                        <button type="submit" class="w-2/3 bg-flag-green text-white font-brutal text-xl md:text-2xl py-3 brutal-border shadow-brutal hover:bg-flag-blue hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
+                                            CONCLUIR
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="text-center mt-3 pt-2">
+                                <button type="button" id="scroll-to-rules" class="underline font-bold text-flag-blue hover:text-flag-green transition-colors cursor-pointer font-body text-xs md:text-sm">
+                                    Rever condições de participação!
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DOBRA 3: FAQ (Perguntas Frequentes) -->
+        <div id="faq-dobra" class="w-full bg-white min-h-screen px-4 sm:px-6 py-16 md:py-24 relative flex flex-col items-center justify-start border-t-[12px] border-neon-yellow">
+            <div class="w-full max-w-[768px] lg:max-w-[1024px] text-black">
+                
+                <h2 class="font-brutal text-5xl md:text-7xl text-flag-green uppercase leading-none mb-10 text-center md:text-left">
+                    PERGUNTAS <span class="text-flag-blue">FREQUENTES</span>
+                </h2>
+
+                <div class="flex flex-col gap-4">
+                    <!-- Q1 -->
+                    <div class="brutal-border bg-flag-blue shadow-brutal transition-all group overflow-hidden">
+                        <button class="faq-question w-full text-left p-5 md:p-6 flex justify-between items-center cursor-pointer focus:outline-none">
+                            <h4 class="faq-title font-brutal text-lg md:text-xl text-white group-hover:text-neon-yellow transition-colors m-0 pr-4">Comprei AUVP Escola antes ou depois dos dias 29/30, ainda posso participar?</h4>
+                            <span class="faq-icon font-brutal text-3xl text-white group-hover:text-neon-yellow transition-transform duration-300 origin-center leading-none">+</span>
+                        </button>
+                        <div class="faq-answer max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out px-5 md:px-6">
+                            <p class="font-body text-sm md:text-base text-white pb-6"><strong class="text-neon-yellow">R:</strong> Não, essa campanha é exclusiva para quem entrou na nossa base durante os dias 29 e 30 de abril de 2026.</p>
+                        </div>
+                    </div>
+                    <!-- Q2 -->
+                    <div class="brutal-border bg-flag-blue shadow-brutal transition-all group overflow-hidden">
+                        <button class="faq-question w-full text-left p-5 md:p-6 flex justify-between items-center cursor-pointer focus:outline-none">
+                            <h4 class="faq-title font-brutal text-lg md:text-xl text-white group-hover:text-neon-yellow transition-colors m-0 pr-4">Posso cadastrar contas no nome de terceiros?</h4>
+                            <span class="faq-icon font-brutal text-3xl text-white group-hover:text-neon-yellow transition-transform duration-300 origin-center leading-none">+</span>
+                        </button>
+                        <div class="faq-answer max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out px-5 md:px-6">
+                            <p class="font-body text-sm md:text-base text-white pb-6"><strong class="text-neon-yellow">R:</strong> SIM. É possível cadastrar contas na campanha que estejam em nome de terceiros também.</p>
+                        </div>
+                    </div>
+                    <!-- Q3 -->
+                    <div class="brutal-border bg-flag-blue shadow-brutal transition-all group overflow-hidden">
+                        <button class="faq-question w-full text-left p-5 md:p-6 flex justify-between items-center cursor-pointer focus:outline-none">
+                            <h4 class="faq-title font-brutal text-lg md:text-xl text-white group-hover:text-neon-yellow transition-colors m-0 pr-4">Já preenchi todos os requisitos antes do começo da campanha, ainda consigo uma camisa?</h4>
+                            <span class="faq-icon font-brutal text-3xl text-white group-hover:text-neon-yellow transition-transform duration-300 origin-center leading-none">+</span>
+                        </button>
+                        <div class="faq-answer max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out px-5 md:px-6">
+                            <p class="font-body text-sm md:text-base text-white pb-6"><strong class="text-neon-yellow">R:</strong> Se você já está com tudo ativo e não consegue participar da campanha por regra de elegibilidade, a gente pensou nisso também. Vamos liberar um lote limitado de camisetas para compra. Iremos divulgar o link em breve.</p>
+                        </div>
+                    </div>
+                    <!-- Q4 -->
+                    <div class="brutal-border bg-flag-blue shadow-brutal transition-all group overflow-hidden">
+                        <button class="faq-question w-full text-left p-5 md:p-6 flex justify-between items-center cursor-pointer focus:outline-none">
+                            <h4 class="faq-title font-brutal text-lg md:text-xl text-white group-hover:text-neon-yellow transition-colors m-0 pr-4">Existe um valor mínimo investido com AUVP pra participar?</h4>
+                            <span class="faq-icon font-brutal text-3xl text-white group-hover:text-neon-yellow transition-transform duration-300 origin-center leading-none">+</span>
+                        </button>
+                        <div class="faq-answer max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out px-5 md:px-6">
+                            <p class="font-body text-sm md:text-base text-white pb-6"><strong class="text-neon-yellow">R:</strong> Não. Nossos pré-requisitos quanto a patrimônio são percentuais, ou seja, o único critério de elegibilidade que possuímos diz respeito a ter mais de 80% do patrimônio conosco.</p>
+                        </div>
+                    </div>
+                    <!-- Q5 -->
+                    <div class="brutal-border bg-flag-blue shadow-brutal transition-all group overflow-hidden">
+                        <button class="faq-question w-full text-left p-5 md:p-6 flex justify-between items-center cursor-pointer focus:outline-none">
+                            <h4 class="faq-title font-brutal text-lg md:text-xl text-white group-hover:text-neon-yellow transition-colors m-0 pr-4">Caso minha conta de débito automático esteja sendo cobrada no Cartão de Crédito AUVP. Tá valendo?</h4>
+                            <span class="faq-icon font-brutal text-3xl text-white group-hover:text-neon-yellow transition-transform duration-300 origin-center leading-none">+</span>
+                        </button>
+                        <div class="faq-answer max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out px-5 md:px-6">
+                            <p class="font-body text-sm md:text-base text-white pb-6"><strong class="text-neon-yellow">R:</strong> Sim, mas lembre-se de que débito automático e assinatura de streaming no cartão de crédito são duas coisas diferentes na lista.</p>
+                        </div>
+                    </div>
+                    <!-- Q6 -->
+                    <div class="brutal-border bg-flag-blue shadow-brutal transition-all group overflow-hidden">
+                        <button class="faq-question w-full text-left p-5 md:p-6 flex justify-between items-center cursor-pointer focus:outline-none">
+                            <h4 class="faq-title font-brutal text-lg md:text-xl text-white group-hover:text-neon-yellow transition-colors m-0 pr-4">Se eu fizer uma assinatura de streaming hoje, mas que será cobrada só mês que vem, tá valendo?</h4>
+                            <span class="faq-icon font-brutal text-3xl text-white group-hover:text-neon-yellow transition-transform duration-300 origin-center leading-none">+</span>
+                        </button>
+                        <div class="faq-answer max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out px-5 md:px-6">
+                            <p class="font-body text-sm md:text-base text-white pb-6"><strong class="text-neon-yellow">R:</strong> Não, a cobrança precisa ser feita já no primeiro mês direto.</p>
+                        </div>
+                    </div>
+                    <!-- Q7 -->
+                    <div class="brutal-border bg-flag-blue shadow-brutal transition-all group overflow-hidden">
+                        <button class="faq-question w-full text-left p-5 md:p-6 flex justify-between items-center cursor-pointer focus:outline-none">
+                            <h4 class="faq-title font-brutal text-lg md:text-xl text-white group-hover:text-neon-yellow transition-colors m-0 pr-4">Para além dos streamings mencionados, há mais algum que ao ser assinado me ajudaria a concorrer a uma camisa?</h4>
+                            <span class="faq-icon font-brutal text-3xl text-white group-hover:text-neon-yellow transition-transform duration-300 origin-center leading-none">+</span>
+                        </button>
+                        <div class="faq-answer max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out px-5 md:px-6">
+                            <p class="font-body text-sm md:text-base text-white pb-6"><strong class="text-neon-yellow">R:</strong> Não, só aceitaremos a assinatura de um dos streamings citados.</p>
+                        </div>
+                    </div>
+                    <!-- Q8 -->
+                    <div class="brutal-border bg-flag-blue shadow-brutal transition-all group overflow-hidden">
+                        <button class="faq-question w-full text-left p-5 md:p-6 flex justify-between items-center cursor-pointer focus:outline-none">
+                            <h4 class="faq-title font-brutal text-lg md:text-xl text-white group-hover:text-neon-yellow transition-colors m-0 pr-4">Até hoje não consegui aprovação do cartão de crédito AUVP. Vou ter que ficar de fora?</h4>
+                            <span class="faq-icon font-brutal text-3xl text-white group-hover:text-neon-yellow transition-transform duration-300 origin-center leading-none">+</span>
+                        </button>
+                        <div class="faq-answer max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out px-5 md:px-6">
+                            <p class="font-body text-sm md:text-base text-white pb-6"><strong class="text-neon-yellow">R:</strong> O cartão AUVP está sujeito à análise de crédito, nesse sentido, caso a aprovação seja negada, você ficará de fora.</p>
+                        </div>
+                    </div>
+                    <!-- Q9 -->
+                    <div class="brutal-border bg-flag-blue shadow-brutal transition-all group overflow-hidden">
+                        <button class="faq-question w-full text-left p-5 md:p-6 flex justify-between items-center cursor-pointer focus:outline-none">
+                            <h4 class="faq-title font-brutal text-lg md:text-xl text-white group-hover:text-neon-yellow transition-colors m-0 pr-4">Tenho todos os requisitos, mas moro no exterior. Ainda posso participar?</h4>
+                            <span class="faq-icon font-brutal text-3xl text-white group-hover:text-neon-yellow transition-transform duration-300 origin-center leading-none">+</span>
+                        </button>
+                        <div class="faq-answer max-h-0 opacity-0 overflow-hidden transition-all duration-300 ease-in-out px-5 md:px-6">
+                            <p class="font-body text-sm md:text-base text-white pb-6"><strong class="text-neon-yellow">R:</strong> Nesse caso você não se enquadraria, visto que os envios serão feitos apenas nacionalmente.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Widget Flutuante de WhatsApp -->
+    <div id="whatsapp-widget-container">
+        <div class="whatsapp-bubble">Precisa de ajuda com alguma etapa?</div>
+        <a href="https://api.whatsapp.com/send?phone=556240150505&text=Vai%20brasa" target="_blank" class="whatsapp-icon-btn">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.305-.88-.653-1.474-1.46-1.646-1.757-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+            </svg>
+        </a>
+    </div>
+
+    <!-- Modal de Obrigado (Overlay Fixo) -->
+    <div id="thank-you-section" class="fixed inset-0 bg-black/80 z-[200] opacity-0 pointer-events-none transition-opacity duration-500 flex items-center justify-center p-4">
+        <div class="bg-white max-w-2xl w-full brutal-border shadow-brutal-yellow flex flex-col transform transition-all duration-700" id="thank-you-card">
+            <div class="hidden md:block w-full h-48 md:h-80 border-b-4 border-black overflow-hidden bg-black relative">
                 <div class="absolute top-4 left-4 z-20 bg-flag-green text-white font-brutal text-xl px-3 py-1 brutal-border shadow-brutal">
                     SUCESSO
                 </div>
@@ -547,21 +738,139 @@
             </div>
             
             <div class="p-6 md:p-12 text-center flex flex-col items-center z-10">
-                <h2 class="font-brutal text-4xl md:text-6xl text-flag-blue uppercase leading-none mb-4">
-                    CAMISETA RESGATADA
+                <h2 class="font-brutal text-4xl md:text-5xl text-flag-blue uppercase leading-none mb-4">
+                    FORMULÁRIO PREENCHIDO
                 </h2>
-                <p class="font-body font-bold text-gray-700 text-base md:text-xl border-t-4 border-flag-green pt-4">
-                    Um e-mail chegará na sua conta em breve confirmando sua solicitação de resgate.
+                <p class="font-body font-bold text-gray-700 text-base md:text-lg border-t-4 border-flag-green pt-4">
+                    Todas as suas respostas passarão por uma análise de dados e adequação, com base nos pre requisitos da campanha. Caso você se encaixe, um e-mail chegará na sua conta confirmando a solicitação de resgate.
                 </p>
                 <button id="back-home-btn" class="w-full bg-flag-blue text-white font-brutal text-2xl py-3 mt-8 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
                     VOLTAR AO INÍCIO
                 </button>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- Popup / Modal de Termos da Campanha -->
-    <div id="terms-modal" class="fixed inset-0 bg-black bg-opacity-80 z-[100] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+    <!-- Popup: Tutorial Débito Automático -->
+    <div id="modal-debito" class="fixed inset-0 bg-black/90 z-[300] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white text-black p-6 md:p-10 max-w-2xl w-full brutal-border shadow-brutal-yellow relative transform scale-95 transition-transform duration-300 max-h-[90vh] flex flex-col tutorial-content">
+            <button onclick="closeTutorial('modal-debito')" class="absolute top-4 right-4 font-brutal text-2xl w-10 h-10 flex items-center justify-center bg-black text-white brutal-border hover:bg-red-600 transition-colors cursor-pointer z-10">
+                X
+            </button>
+            <h3 class="font-brutal text-3xl md:text-4xl mb-6 text-flag-blue uppercase border-b-4 border-black pb-4 pr-12">Tutorial: Débito Automático</h3>
+            
+            <div class="overflow-y-auto pr-2 custom-scrollbar space-y-8 flex-1">
+                <!-- Passo 1 -->
+                <div class="flex flex-col items-center bg-gray-50 p-4 brutal-border">
+                    <span class="bg-neon-yellow text-black px-3 py-1 font-brutal mb-3 brutal-border">PASSO 1</span>
+                    <p class="font-bold text-lg mb-4 text-center">Abra o aplicativo BTG Banking</p>
+                    <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/D%C3%A9bito%20autom%C3%A1tico/0.jpeg" class="w-full max-w-xs brutal-border" alt="Tutorial">
+                </div>
+                <!-- Passo 2 -->
+                <div class="flex flex-col items-center bg-gray-50 p-4 brutal-border">
+                    <span class="bg-neon-yellow text-black px-3 py-1 font-brutal mb-3 brutal-border">PASSO 2</span>
+                    <p class="font-bold text-lg mb-4 text-center">Clique no menu "Pagar"</p>
+                    <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/D%C3%A9bito%20autom%C3%A1tico/1.png" class="w-full max-w-xs brutal-border" alt="Tutorial">
+                </div>
+                <!-- Passo 3 -->
+                <div class="flex flex-col items-center bg-gray-50 p-4 brutal-border">
+                    <span class="bg-neon-yellow text-black px-3 py-1 font-brutal mb-3 brutal-border">PASSO 3</span>
+                    <p class="font-bold text-lg mb-4 text-center">Selecione a opção "Débito Automático"</p>
+                    <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/D%C3%A9bito%20autom%C3%A1tico/2.png" class="w-full max-w-xs brutal-border" alt="Tutorial">
+                </div>
+                <!-- Passo 4 -->
+                <div class="flex flex-col items-center bg-gray-50 p-4 brutal-border">
+                    <span class="bg-neon-yellow text-black px-3 py-1 font-brutal mb-3 brutal-border">PASSO 4</span>
+                    <p class="font-bold text-lg mb-4 text-center">Clique em "Cadastrar Novo"</p>
+                    <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/D%C3%A9bito%20autom%C3%A1tico/3.png" class="w-full max-w-xs brutal-border" alt="Tutorial">
+                </div>
+                <!-- Passo 5 -->
+                <div class="flex flex-col items-center bg-gray-50 p-4 brutal-border">
+                    <span class="bg-neon-yellow text-black px-3 py-1 font-brutal mb-3 brutal-border">PASSO 5</span>
+                    <p class="font-bold text-lg mb-4 text-center">Escolha a categoria e a empresa prestadora</p>
+                    <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/D%C3%A9bito%20autom%C3%A1tico/4.png" class="w-full max-w-xs brutal-border" alt="Tutorial">
+                </div>
+                <!-- Passo 6 -->
+                <div class="flex flex-col items-center bg-gray-50 p-4 brutal-border">
+                    <span class="bg-neon-yellow text-black px-3 py-1 font-brutal mb-3 brutal-border">PASSO 6</span>
+                    <p class="font-bold text-lg mb-4 text-center">Insira o código da empresa (no aplicativo, há uma imagem ilustrativa para que você o encontre)</p>
+                    <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/D%C3%A9bito%20autom%C3%A1tico/5.png" class="w-full max-w-xs brutal-border" alt="Tutorial">
+                </div>
+                <!-- Passo 7 -->
+                <div class="flex flex-col items-center bg-gray-50 p-4 brutal-border">
+                    <span class="bg-neon-yellow text-black px-3 py-1 font-brutal mb-3 brutal-border">PASSO 7</span>
+                    <p class="font-bold text-lg mb-4 text-center">Informe o dia do mês que sua cobrança será efetuada</p>
+                    <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/D%C3%A9bito%20autom%C3%A1tico/6.png" class="w-full max-w-xs brutal-border" alt="Tutorial">
+                </div>
+                <!-- Passo 8 -->
+                <div class="flex flex-col items-center bg-gray-50 p-4 brutal-border">
+                    <span class="bg-neon-yellow text-black px-3 py-1 font-brutal mb-3 brutal-border">PASSO 8</span>
+                    <p class="font-bold text-lg mb-4 text-center">Confirme as informações e cadastre-se</p>
+                    <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/D%C3%A9bito%20autom%C3%A1tico/7.png" class="w-full max-w-xs brutal-border" alt="Tutorial">
+                </div>
+            </div>
+            
+            <button onclick="closeTutorial('modal-debito')" class="w-full bg-flag-blue text-white font-brutal text-xl py-3 mt-6 brutal-border shadow-brutal hover:bg-neon-yellow hover:text-black hover:-translate-y-1 hover:-translate-x-1 hover:shadow-none transition-all uppercase cursor-pointer">
+                Entendido
+            </button>
+        </div>
+    </div>
+
+    <!-- Popup: Tutorial Open Finance -->
+    <div id="modal-openfinance" class="fixed inset-0 bg-black/90 z-[300] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white text-black p-6 md:p-10 max-w-2xl w-full brutal-border shadow-brutal-blue relative transform scale-95 transition-transform duration-300 max-h-[90vh] flex flex-col tutorial-content">
+            <button onclick="closeTutorial('modal-openfinance')" class="absolute top-4 right-4 font-brutal text-2xl w-10 h-10 flex items-center justify-center bg-black text-white brutal-border hover:bg-red-600 transition-colors cursor-pointer z-10">
+                X
+            </button>
+            <h3 class="font-brutal text-3xl md:text-4xl mb-6 text-flag-blue uppercase border-b-4 border-black pb-4 pr-12">Tutorial: Open Finance</h3>
+            
+            <div class="overflow-y-auto pr-2 custom-scrollbar space-y-8 flex-1">
+                <!-- Passo 1 -->
+                <div class="flex flex-col items-center bg-gray-50 p-4 brutal-border">
+                    <span class="bg-neon-yellow text-black px-3 py-1 font-brutal mb-3 brutal-border">PASSO 1</span>
+                    <p class="font-bold text-lg mb-4 text-center">Acesse seu aplicativo BTG Banking</p>
+                    <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/Open%20finance/0.jpeg" class="w-full max-w-xs brutal-border" alt="Tutorial">
+                </div>
+                <!-- Passo 2 -->
+                <div class="flex flex-col items-center bg-gray-50 p-4 brutal-border">
+                    <span class="bg-neon-yellow text-black px-3 py-1 font-brutal mb-3 brutal-border">PASSO 2</span>
+                    <p class="font-bold text-lg mb-4 text-center">Acesse o menu superior do app BTG Investimentos ou Banking e, em seguida, toque em "Open Finance".</p>
+                    <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/Open%20finance/1.png" class="w-full max-w-xs brutal-border" alt="Tutorial">
+                </div>
+                <!-- Passo 3 -->
+                <div class="flex flex-col items-center bg-gray-50 p-4 brutal-border">
+                    <span class="bg-neon-yellow text-black px-3 py-1 font-brutal mb-3 brutal-border">PASSO 3</span>
+                    <p class="font-bold text-lg mb-4 text-center">Selecione "Adicionar instituições" > escolha a instituição de origem dos dados > "Continuar".</p>
+                    <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/Open%20finance/2.png" class="w-full max-w-xs brutal-border" alt="Tutorial">
+                </div>
+                <!-- Passo 4 -->
+                <div class="flex flex-col items-center bg-gray-50 p-4 brutal-border">
+                    <span class="bg-neon-yellow text-black px-3 py-1 font-brutal mb-3 brutal-border">PASSO 4</span>
+                    <p class="font-bold text-lg mb-4 text-center">Em "Confirmação de compartilhamento", toque em "Confirmar", leia e aceite os termos de uso e confirme novamente.</p>
+                    <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/Open%20finance/3.png" class="w-full max-w-xs brutal-border" alt="Tutorial">
+                </div>
+                <!-- Passo 5 -->
+                <div class="flex flex-col items-center bg-gray-50 p-4 brutal-border">
+                    <span class="bg-neon-yellow text-black px-3 py-1 font-brutal mb-3 brutal-border">PASSO 5</span>
+                    <p class="font-bold text-lg mb-4 text-center">Por fim, você será redirecionado ao site da outra instituição, onde deverá fazer login e autorizar o compartilhamento dos dados.</p>
+                    <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/Open%20finance/4.png" class="w-full max-w-xs brutal-border" alt="Tutorial">
+                </div>
+                <!-- Passo 6 -->
+                <div class="flex flex-col items-center bg-gray-50 p-4 brutal-border">
+                    <span class="bg-neon-yellow text-black px-3 py-1 font-brutal mb-3 brutal-border">PASSO 6</span>
+                    <p class="font-bold text-lg mb-4 text-center">Após esse processo, a integração estará devidamente completa.</p>
+                    <img src="https://raw.githubusercontent.com/design-auvp/camisa10/main/Open%20finance/5.png" class="w-full max-w-xs brutal-border" alt="Tutorial">
+                </div>
+            </div>
+            
+            <button onclick="closeTutorial('modal-openfinance')" class="w-full bg-flag-blue text-white font-brutal text-xl py-3 mt-6 brutal-border shadow-brutal hover:bg-neon-yellow hover:text-black hover:-translate-y-1 hover:-translate-x-1 hover:shadow-none transition-all uppercase cursor-pointer">
+                Entendido
+            </button>
+        </div>
+    </div>
+
+    <!-- Popup / Modal dos Termos da Campanha Genérico (Checkbox) -->
+    <div id="terms-modal" class="fixed inset-0 bg-black/80 z-[300] hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
         <div class="bg-dark-bg text-white p-6 md:p-10 max-w-3xl w-full brutal-border-white shadow-brutal-green relative transform scale-95 transition-transform duration-300 max-h-[90vh] flex flex-col" id="terms-content">
             <button id="close-terms" class="absolute top-4 right-4 font-brutal text-2xl w-10 h-10 flex items-center justify-center bg-white text-black brutal-border hover:bg-flag-green hover:text-white transition-colors cursor-pointer z-10">
                 X
@@ -570,20 +879,16 @@
             <h3 class="font-brutal text-4xl mb-6 text-neon-yellow uppercase border-b-4 border-flag-green pb-4">Termos da Campanha</h3>
             
             <div class="font-body text-sm space-y-4 overflow-y-auto pr-4 flex-1 custom-scrollbar">
-                <p class="font-bold text-lg border-l-4 border-flag-blue pl-3">A Copa chegou… e a AUVP decidiu jogar junto.</p>
-                <p>A Copa sempre foi sobre nação, disputa e pertencimento. E esse ano, a gente resolveu levar isso pra prática. Criamos a campanha <strong>Camisa BR x AUVP</strong>, e alguns de vocês poderão levar pra casa esse presente.</p>
+                <p class="font-bold text-lg border-l-4 border-flag-blue pl-3">Chegou a hora de você mostrar que joga o jogo do longo prazo com AUVP e conseguir seu novo manto. Venha participar da campanha Camisa BR x AUVP.</p>
+                <div class="bg-neon-yellow p-3 text-black font-bold brutal-border">⚠️ Edição de Colecionador: O estoque é extremamente limitado e a distribuição será feita por ordem de inscrição. Uma vez esgotado, não teremos reposição.</div>
                 <p class="font-bold text-neon-yellow pt-2">Pra garantir sua camiseta vintage do Brasil, você precisa cumprir o combo completo:</p>
                 <ul class="list-disc pl-5 space-y-2">
-                    <li>Débito automático ativo na sua conta AUVP Capital (Água, Luz, Internet, Telefone, IPTU) (<a href="https://api.whatsapp.com/send?phone=556240150505&text=Vai%20brasa!" target="_blank" class="underline text-flag-green">veja aqui tutorial para ativar o débito automático</a>);</li>
+                    <li>Débito automático ativo na sua conta AUVP Capital (Água, Luz, Internet, Telefone, IPTU). Não cadastre os débitos automáticos pelos sites das concessionárias. Cadastre pelo app BTG Banking.</li>
                     <li>Pagamento de algum streaming/assinatura MENSAL ativo no seu cartão de crédito AUVP Capital (Spotify, Total Pass, Gym Pass, Kindle, Deezer, Netflix, YouTube, HBO, Amazon Music, Amazon Prime, Globo Play, Pet Love);</li>
-                    <li>Open Finance ativo e com 80% do patrimônio com a gente (<a href="https://api.whatsapp.com/send?phone=556240150505&text=Vai%20brasa!" target="_blank" class="underline text-flag-green">veja aqui tutorial para ativar o open finance</a>);</li>
-                    <li>Preencher o formulário para a campanha (liberação a partir do dia 4).</li>
+                    <li>Open Finance ativo e com no mínimo 80% do patrimônio alocado com AUVP;</li>
+                    <li>Preencher o formulário para garantir sua participação na campanha.</li>
                 </ul>
                 <p class="text-gray-400 mt-4">Obs: É possível cadastrar contas em nome de terceiros também. Precisa de ajuda? <a href="https://api.whatsapp.com/send?phone=556240150505&text=Vai%20brasa!" target="_blank" class="underline text-flag-green">Chama o suporte!</a></p>
-                <div class="bg-black p-4 brutal-border-white mt-4 text-gray-300">
-                    <p>⚠️ Importante. Os estoques são LIMITADOS, por ordem de inscrição (que serão abertas no dia 4 de maio). Acabou, acabou.</p>
-                    <p class="mt-2">👀 “Ah, mas eu já tenho tudo isso…” Se você já está com tudo ativo e não consegue participar da campanha por regra de elegibilidade… Relaxa. A gente pensou nisso também. Vamos liberar um lote limitado camisetas para compra. Iremos divulgar o link em breve.</p>
-                </div>
             </div>
 
             <button id="accept-terms-btn" class="w-full bg-flag-green text-white font-brutal text-2xl py-3 mt-6 brutal-border-white hover:bg-white hover:text-black transition-all uppercase cursor-pointer">
@@ -594,65 +899,103 @@
 
     <!-- Script de Interação -->
     <script>
+        // Funções globais para Modais de Tutoriais
+        function openTutorial(id) {
+            const modal = document.getElementById(id);
+            const content = modal.querySelector('.tutorial-content');
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                content.classList.remove('scale-95');
+                content.classList.add('scale-100');
+            }, 10);
+        }
+
+        function closeTutorial(id) {
+            const modal = document.getElementById(id);
+            const content = modal.querySelector('.tutorial-content');
+            modal.classList.add('opacity-0');
+            content.classList.remove('scale-100');
+            content.classList.add('scale-95');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
+            
             const startBtn = document.getElementById('start-btn');
-            const introOverlay = document.getElementById('intro-overlay');
-            const introContent = document.getElementById('intro-content');
             const formSection = document.getElementById('form-section');
-            const mainCard = document.getElementById('main-card');
-
-            // --- Lógica de Transição (Hero -> Form) ---
-            startBtn.addEventListener('click', () => {
-                introContent.classList.add('fade-out');
-                introOverlay.classList.add('overlay-blur');
-                
-                setTimeout(() => {
-                    formSection.classList.add('fade-in');
-                    mainCard.classList.remove('translate-y-10');
-                    mainCard.classList.add('translate-y-0');
-                    formSection.scrollTop = 0;
-                }, 300);
-            });
-
-            // --- Lógica de Scroll para as Regras e Animação de Borda ---
             const scrollToRulesBtn = document.getElementById('scroll-to-rules');
             const rulesFold = document.getElementById('regras-dobra');
-            const backToFormBtn = document.getElementById('back-to-form-btn');
+            const goToFormBtn = document.getElementById('go-to-form-btn'); 
+
+            // --- Lógica de Smooth Scroll Global ---
+            startBtn.addEventListener('click', () => {
+                rulesFold.scrollIntoView({ behavior: 'smooth' });
+            });
 
             scrollToRulesBtn.addEventListener('click', () => {
-                formSection.scrollTo({
-                    top: rulesFold.offsetTop,
-                    behavior: 'smooth'
-                });
+                rulesFold.scrollIntoView({ behavior: 'smooth' });
             });
 
-            backToFormBtn.addEventListener('click', () => {
-                formSection.scrollTo({
-                    top: 0,
-                    behavior: 'smooth'
-                });
+            goToFormBtn.addEventListener('click', () => {
+                formSection.scrollIntoView({ behavior: 'smooth' });
             });
 
-            // Observador para ativar a animação da borda colorida apenas quando estiver na seção de termos
-            const observerDobra2 = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('animate-border-cycle');
-                    } else {
-                        entry.target.classList.remove('animate-border-cycle');
-                    }
-                });
-            }, { threshold: 0.1 });
+            // --- Lógica de Scroll e Animação da Borda Colorida ---
+            const fixedOverlay = document.getElementById('fixed-overlay');
             
-            if(rulesFold) {
-                observerDobra2.observe(rulesFold);
-            }
+            window.addEventListener('scroll', () => {
+                const scrollTop = window.scrollY || document.documentElement.scrollTop;
+                
+                if (scrollTop > window.innerHeight * 0.2) {
+                    fixedOverlay.classList.add('with-blur');
+                } else {
+                    fixedOverlay.classList.remove('with-blur');
+                }
 
-            // --- Lógica do Carrossel ---
+                const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+                
+                if (maxScroll <= 0) return;
+                
+                const progress = Math.min(Math.max(scrollTop / maxScroll, 0), 1);
+                
+                const green = [0, 156, 59];
+                const yellow = [255, 230, 0];
+                const blue = [0, 39, 118];
+                
+                let r, g, b;
+                
+                if (progress < 0.5) {
+                    const p = progress * 2; 
+                    r = Math.round(green[0] + (yellow[0] - green[0]) * p);
+                    g = Math.round(green[1] + (yellow[1] - green[1]) * p);
+                    b = Math.round(green[2] + (yellow[2] - green[2]) * p);
+                } else {
+                    const p = (progress - 0.5) * 2; 
+                    r = Math.round(yellow[0] + (blue[0] - yellow[0]) * p);
+                    g = Math.round(yellow[1] + (blue[1] - yellow[1]) * p);
+                    b = Math.round(yellow[2] + (blue[2] - yellow[2]) * p);
+                }
+                
+                // Aplica a cor na borda de baixo da dobra das regras
+                rulesFold.style.borderBottomColor = `rgb(${r}, ${g}, ${b})`;
+            });
+
+            // Fechar modal ao clicar fora dele
+            document.querySelectorAll('[id^="modal-"]').forEach(modal => {
+                modal.addEventListener('click', (e) => {
+                    if (e.target === modal) closeTutorial(modal.id);
+                });
+            });
+
+            // --- Lógica do Carrossel Automático ---
             const slides = document.querySelectorAll('.carousel-slide');
             const nextBtn = document.getElementById('next-btn');
             const prevBtn = document.getElementById('prev-btn');
             let currentSlide = 0;
+            let carouselInterval;
 
             function showSlide(index) {
                 slides.forEach(slide => slide.classList.remove('active'));
@@ -662,15 +1005,29 @@
                 slides[currentSlide].classList.add('active');
             }
 
+            function startCarousel() {
+                carouselInterval = setInterval(() => {
+                    showSlide(currentSlide + 1);
+                }, 3000); 
+            }
+
+            function stopCarousel() {
+                clearInterval(carouselInterval);
+            }
+
             nextBtn.addEventListener('click', (e) => {
                 e.preventDefault();
+                stopCarousel();
                 showSlide(currentSlide + 1);
             });
 
             prevBtn.addEventListener('click', (e) => {
                 e.preventDefault();
+                stopCarousel();
                 showSlide(currentSlide - 1);
             });
+
+            startCarousel();
 
             // --- Validação de CPF ---
             function isCPFValid(cpf) {
@@ -724,22 +1081,36 @@
                     return;
                 }
 
-                step1.classList.remove('opacity-100', 'visible', 'z-10');
-                step1.classList.add('opacity-0', 'invisible', 'z-0');
+                step1.classList.remove('opacity-100');
+                step1.classList.add('opacity-0');
                 
-                step2.classList.remove('opacity-0', 'invisible', 'z-0');
-                step2.classList.add('opacity-100', 'visible', 'z-10');
+                setTimeout(() => {
+                    step1.classList.add('hidden');
+                    step2.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        step2.classList.remove('opacity-0');
+                        step2.classList.add('opacity-100');
+                    }, 50);
+                }, 300);
                 
                 stepTitle.innerHTML = '2. Endereço de Entrega';
                 stepCounter.innerHTML = 'ETAPA 2/2';
             });
 
             backStepBtn.addEventListener('click', () => {
-                step2.classList.remove('opacity-100', 'visible', 'z-10');
-                step2.classList.add('opacity-0', 'invisible', 'z-0');
+                step2.classList.remove('opacity-100');
+                step2.classList.add('opacity-0');
                 
-                step1.classList.remove('opacity-0', 'invisible', 'z-0');
-                step1.classList.add('opacity-100', 'visible', 'z-10');
+                setTimeout(() => {
+                    step2.classList.add('hidden');
+                    step1.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        step1.classList.remove('opacity-0');
+                        step1.classList.add('opacity-100');
+                    }, 50);
+                }, 300);
                 
                 stepTitle.innerHTML = '1. Dados Pessoais';
                 stepCounter.innerHTML = 'ETAPA 1/2';
@@ -747,6 +1118,9 @@
 
             // --- Lógica do Formulário (Envio Final) ---
             const leadForm = document.getElementById('lead-form');
+            const thankYouSection = document.getElementById('thank-you-section');
+            const backHomeBtn = document.getElementById('back-home-btn');
+
             leadForm.addEventListener('submit', (e) => {
                 e.preventDefault();
                 
@@ -762,34 +1136,27 @@
                     leadForm.reset();
 
                     step2.classList.add('hidden');
+                    step2.classList.remove('opacity-100');
+                    step2.classList.add('opacity-0');
+                    
                     step1.classList.remove('hidden');
+                    step1.classList.remove('opacity-0');
+                    step1.classList.add('opacity-100');
+                    
                     stepTitle.innerHTML = '1. Dados Pessoais';
                     stepCounter.innerHTML = 'ETAPA 1/2';
                     
-                    const thankYouSection = document.getElementById('thank-you-section');
-                    const thankYouCard = document.getElementById('thank-you-card');
-                    
-                    formSection.classList.remove('fade-in');
-                    
-                    setTimeout(() => {
-                        thankYouSection.classList.add('fade-in');
-                        thankYouCard.classList.remove('translate-y-10');
-                        thankYouCard.classList.add('translate-y-0');
-                    }, 500);
+                    thankYouSection.classList.remove('opacity-0', 'pointer-events-none');
 
                 }, 1500);
             });
 
-            document.getElementById('back-home-btn').addEventListener('click', () => {
-                const thankYouSection = document.getElementById('thank-you-section');
-                thankYouSection.classList.remove('fade-in');
-                introOverlay.classList.remove('overlay-blur');
-                setTimeout(() => {
-                    introContent.classList.remove('fade-out');
-                }, 500);
+            backHomeBtn.addEventListener('click', () => {
+                thankYouSection.classList.add('opacity-0', 'pointer-events-none');
+                window.scrollTo({ top: 0, behavior: 'smooth' }); 
             });
 
-            // --- Lógica do Popup ---
+            // --- Lógica do Modal de Termos Genericos ---
             const termsModal = document.getElementById('terms-modal');
             const openTermsLink = document.getElementById('open-terms');
             const closeTermsBtn = document.getElementById('close-terms');
@@ -876,6 +1243,39 @@
                     }
                 }
             });
+
+            // --- Lógica do Accordion FAQ ---
+            const faqQuestions = document.querySelectorAll('.faq-question');
+            
+            faqQuestions.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const answer = btn.nextElementSibling;
+                    const icon = btn.querySelector('.faq-icon');
+                    const title = btn.querySelector('.faq-title');
+                    const isOpen = answer.classList.contains('max-h-[1000px]');
+
+                    // Fecha todos os outros itens para manter o formato de sanfona limpo
+                    document.querySelectorAll('.faq-answer').forEach(a => {
+                        a.classList.remove('max-h-[1000px]', 'opacity-100');
+                        a.classList.add('max-h-0', 'opacity-0');
+                    });
+                    document.querySelectorAll('.faq-icon').forEach(i => {
+                        i.classList.remove('rotate-45', '!text-neon-yellow');
+                    });
+                    document.querySelectorAll('.faq-title').forEach(t => {
+                        t.classList.remove('!text-neon-yellow');
+                    });
+
+                    // Se não estava aberto, expande o item atual
+                    if (!isOpen) {
+                        answer.classList.remove('max-h-0', 'opacity-0');
+                        answer.classList.add('max-h-[1000px]', 'opacity-100');
+                        icon.classList.add('rotate-45', '!text-neon-yellow'); // Rotaciona o + para X
+                        if (title) title.classList.add('!text-neon-yellow'); // Mantém o texto amarelo enquanto ativo
+                    }
+                });
+            });
+
         });
     </script>
 </body>
