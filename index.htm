@@ -232,11 +232,6 @@
             --piggy-size: 65px;
         }
 
-        @keyframes slideUpEntrance {
-            from { transform: translateY(150px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
         @keyframes floatPiggy {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
@@ -251,7 +246,14 @@
             flex-direction: column;
             align-items: flex-end;
             pointer-events: none;
-            animation: slideUpEntrance 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            opacity: 0;
+            transform: translateY(150px);
+            transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        #whatsapp-widget-container.show-widget {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .whatsapp-bubble {
@@ -315,11 +317,30 @@
             }
             .whatsapp-bubble { max-width: calc(100vw - 50px); font-size: 12px; }
         }
+
+        /* ----- ANIMAÇÃO DA BOLA DE FUTEBOL ----- */
+        @keyframes rollSoccerBall {
+            0% { transform: translate(-30vw, -20vh) rotate(0deg); opacity: 1; }
+            100% { transform: translate(120vw, 120vh) rotate(1080deg); opacity: 1; }
+        }
+        
+        .animate-ball {
+            animation: rollSoccerBall 1.2s cubic-bezier(0.25, 1, 0.5, 1) forwards !important;
+        }
     </style>
 </head>
 <body class="font-body text-white">
 
     <div class="noise"></div>
+
+    <!-- Bola de Futebol (Animação) -->
+    <div id="soccer-ball" class="fixed top-0 left-0 z-[150] pointer-events-none opacity-0 w-20 h-20 md:w-32 md:h-32">
+        <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" class="w-full h-full drop-shadow-[4px_4px_0px_rgba(0,0,0,1)]">
+            <circle cx="256" cy="256" r="250" fill="#fff" stroke="#000" stroke-width="12"/>
+            <path d="M256 81.9l-61.1 44.4-23.3 71.9 44.4 61.1h79.9l44.4-61.1-23.3-71.9L256 81.9z" fill="#000"/>
+            <path d="M124.9 143l13.5 69.1-41.9 57.7-65.7-11.4C51 202.1 82.2 165.7 124.9 143zM387.1 143c42.8 22.8 74 59.2 94.1 115.4l-65.7 11.4-41.9-57.7L387.1 143zM375.3 358.5l-51.5-37.4H188.1l-51.5 37.4-18.7 78.8c37.1 27.6 84.4 44.1 138.1 44.1s101-16.5 138.1-44.1L375.3 358.5zM22.9 298.5l70.5 12.2 26 80.1C85 365 52.8 328.6 22.9 298.5zM489.1 298.5c-29.9 30.1-62.1 66.5-96.5 92.3l26-80.1L489.1 298.5z" fill="#000"/>
+        </svg>
+    </div>
 
     <!-- Background Video Fixado -->
     <div class="video-container">
@@ -418,7 +439,6 @@
                     <p class="border-l-4 border-gray-400 pl-4 text-sm text-gray-500"><strong>Obs:</strong> É possível cadastrar contas em nome de terceiros também.</p>
                     
                     <div class="mt-12 text-center max-w-xl mx-auto">
-                        <!-- Botão atualizado para descer para o formulário -->
                         <button id="go-to-form-btn" class="w-full bg-flag-blue text-white font-brutal text-2xl md:text-3xl py-3 md:py-4 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
                             Ir para o Formulário
                         </button>
@@ -491,7 +511,7 @@
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                                         <div class="md:col-span-2">
                                             <label class="block font-brutal text-sm md:text-base mb-1 uppercase">Nome Completo</label>
-                                            <input type="text" required placeholder="DIGITE SEU NOME" class="input-brutal">
+                                            <input type="text" id="nome" required placeholder="DIGITE SEU NOME" class="input-brutal">
                                         </div>
                                         <div>
                                             <label class="block font-brutal text-sm md:text-base mb-1 uppercase text-flag-blue">CPF *</label>
@@ -503,7 +523,7 @@
                                         </div>
                                         <div class="md:col-span-2">
                                             <label class="block font-brutal text-sm md:text-base mb-1 uppercase">E-mail</label>
-                                            <input type="email" required placeholder="SEU@EMAIL.COM" class="input-brutal">
+                                            <input type="email" id="email" required placeholder="SEU@EMAIL.COM" class="input-brutal">
                                         </div>
                                     </div>
 
@@ -945,6 +965,35 @@
             const rulesFold = document.getElementById('regras-dobra');
             const goToFormBtn = document.getElementById('go-to-form-btn'); 
 
+            // --- Lógica de Animação da Bola de Futebol ---
+            const soccerBall = document.getElementById('soccer-ball');
+            let isRolling = false;
+
+            function triggerSoccerBall() {
+                if (isRolling) return;
+                isRolling = true;
+                
+                // Reinicia a animação
+                soccerBall.classList.remove('animate-ball');
+                void soccerBall.offsetWidth; // Reflow forçado
+                soccerBall.classList.add('animate-ball');
+                
+                // Libera para uma próxima execução após o término (1.2s + margem)
+                setTimeout(() => {
+                    isRolling = false;
+                    soccerBall.classList.remove('animate-ball');
+                }, 1300);
+            }
+
+            // Observador para disparar a bola quando a seção de Regras entrar na tela
+            const ballObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) triggerSoccerBall();
+                });
+            }, { threshold: 0.3 });
+
+            ballObserver.observe(rulesFold);
+
             // --- Lógica de Smooth Scroll Global ---
             startBtn.addEventListener('click', () => {
                 rulesFold.scrollIntoView({ behavior: 'smooth' });
@@ -960,6 +1009,7 @@
 
             // --- Lógica de Scroll e Animação da Borda Colorida ---
             const fixedOverlay = document.getElementById('fixed-overlay');
+            const whatsappWidget = document.getElementById('whatsapp-widget-container');
             
             window.addEventListener('scroll', () => {
                 const scrollTop = window.scrollY || document.documentElement.scrollTop;
@@ -968,6 +1018,13 @@
                     fixedOverlay.classList.add('with-blur');
                 } else {
                     fixedOverlay.classList.remove('with-blur');
+                }
+
+                // Controla a visibilidade do WhatsApp Widget (a partir da 2ª dobra)
+                if (scrollTop > window.innerHeight * 0.5) {
+                    whatsappWidget.classList.add('show-widget');
+                } else {
+                    whatsappWidget.classList.remove('show-widget');
                 }
 
                 const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -1167,7 +1224,7 @@
             const thankYouSection = document.getElementById('thank-you-section');
             const backHomeBtn = document.getElementById('back-home-btn');
 
-            leadForm.addEventListener('submit', (e) => {
+            leadForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
                 // Validação Final de CEP antes do envio
@@ -1191,7 +1248,58 @@
                 btn.innerHTML = 'ENVIANDO DADOS...';
                 btn.classList.add('bg-gray-400', 'text-black', 'pointer-events-none');
                 
-                setTimeout(() => {
+                try {
+                    // Prepara a imagem do comprovante
+                    const fileInput = document.getElementById('comprovante');
+                    const file = fileInput.files[0];
+                    let base64File = "";
+                    let fileName = "";
+                    let mimeType = "";
+
+                    if (file) {
+                        fileName = file.name;
+                        mimeType = file.type;
+                        // Converte o arquivo para Base64 para envio via JSON
+                        base64File = await new Promise((resolve, reject) => {
+                            const reader = new FileReader();
+                            reader.onload = () => resolve(reader.result.split(',')[1]);
+                            reader.onerror = reject;
+                            reader.readAsDataURL(file);
+                        });
+                    }
+
+                    // Coleta todos os dados do formulário
+                    const data = {
+                        nome: document.getElementById('nome').value,
+                        cpf: document.getElementById('cpf').value,
+                        whatsapp: document.getElementById('whatsapp').value,
+                        email: document.getElementById('email').value,
+                        tamanho: document.querySelector('input[name="size"]:checked').value,
+                        cep: document.getElementById('cep').value,
+                        logradouro: document.getElementById('logradouro').value,
+                        numero: document.getElementById('numero').value,
+                        complemento: document.getElementById('complemento').value,
+                        bairro: document.getElementById('bairro').value,
+                        cidade: document.getElementById('cidade').value,
+                        uf: document.getElementById('uf').value,
+                        fileName: fileName,
+                        mimeType: mimeType,
+                        base64File: base64File
+                    };
+
+                    // Substitua pela URL gerada no Google Apps Script
+                    const scriptURL = 'COLE_SUA_URL_DO_GOOGLE_APPS_SCRIPT_AQUI';
+
+                    // Envia os dados para a Planilha
+                    await fetch(scriptURL, {
+                        method: 'POST',
+                        body: JSON.stringify(data),
+                        headers: {
+                            "Content-Type": "text/plain;charset=utf-8" // text/plain evita bloqueio de CORS no Google Script
+                        }
+                    });
+
+                    // Limpeza e Sucesso
                     btn.innerHTML = originalText;
                     btn.classList.remove('bg-gray-400', 'text-black', 'pointer-events-none');
                     leadForm.reset();
@@ -1209,7 +1317,14 @@
                     
                     thankYouSection.classList.remove('opacity-0', 'pointer-events-none');
 
-                }, 1500);
+                } catch (error) {
+                    console.error('Erro ao enviar!', error);
+                    btn.innerHTML = 'ERRO! TENTE NOVAMENTE';
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.classList.remove('bg-gray-400', 'text-black', 'pointer-events-none');
+                    }, 3000);
+                }
             });
 
             backHomeBtn.addEventListener('click', () => {
