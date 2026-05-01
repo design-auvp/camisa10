@@ -385,11 +385,11 @@
             box-shadow: 8px 8px 0px 0px #002776 !important; /* Drop shadow Azul */
             transition: all 0.3s ease !important;
         }
-        .faq-box-force-bg:hover, .faq-box-force-bg:focus {
+        .faq-box-force-bg:hover, .faq-box-force-bg:focus, .faq-box-active {
             background-color: #ffffff !important;
             border: 4px solid #000 !important;
             outline: none !important;
-            box-shadow: 8px 8px 0px 0px #009C3B !important; /* Drop shadow muda para Verde no hover */
+            box-shadow: 8px 8px 0px 0px #009C3B !important; /* Drop shadow muda para Verde no hover e ativo */
             transform: translate(-2px, -2px) !important;
         }
         .faq-question {
@@ -470,7 +470,7 @@
                                 Débito automático ativo na sua conta AUVP Capital (Água, Luz, Internet, Telefone, IPTU). 
                                 <span class="font-bold">Não cadastre os débitos automáticos pelos sites das concessionárias. Cadastre pelo app BTG Banking.</span>
                             </p>
-                            <button onclick="openTutorial('modal-debito')" class="block w-full md:w-auto bg-flag-blue text-white font-brutal text-sm sm:text-base md:text-lg px-3 sm:px-6 py-3 brutal-border shadow-brutal group-hover:bg-neon-yellow group-hover:text-black hover:!bg-flag-green hover:!text-white hover:-translate-y-1 hover:-translate-x-1 hover:shadow-none transition-all uppercase cursor-pointer text-center whitespace-normal break-words leading-snug">
+                            <button onclick="openTutorial('modal-debito')" class="block w-full md:w-auto bg-flag-blue text-white font-brutal text-sm sm:text-base md:text-lg px-3 sm:px-6 py-3 brutal-border shadow-brutal group-hover:bg-neon-yellow group-hover:text-black hover:!bg-flag-green hover:!text-white hover:translate-y-[8px] hover:translate-x-[8px] hover:shadow-none transition-all uppercase cursor-pointer text-center whitespace-normal break-words leading-snug">
                                 Tutorial para ativar débito automático
                             </button>
                         </div>
@@ -481,7 +481,7 @@
                             <p class="text-base md:text-lg text-gray-800 mb-6 group-hover:text-white transition-colors">Ter o pagamento de algum streaming/assinatura MENSAL ativo no seu cartão de crédito AUVP Capital.</p>
                             
                             <!-- Tags das Plataformas -->
-                            <div class="flex flex-wrap gap-2 md:gap-3">
+                            <div class="flex flex-wrap gap-2 md:gap-3 mb-2">
                                 <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Amazon Music</span>
                                 <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Amazon Prime</span>
                                 <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Deezer</span>
@@ -495,6 +495,17 @@
                                 <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">Total Pass</span>
                                 <span class="bg-white text-black font-brutal text-sm md:text-base px-3 py-1 brutal-border group-hover:border-white transition-colors">YouTube</span>
                             </div>
+                            
+                            <!-- Pulo do Gato (WhatsApp) -->
+                            <div class="mt-6 pt-6 border-t-2 border-black/10 group-hover:border-white/20 transition-colors">
+                                <p class="font-bold text-base md:text-lg mb-4 text-gray-800 group-hover:text-neon-yellow transition-colors">Acha que não tem nenhum streaming?</p>
+                                <a href="https://api.whatsapp.com/send?phone=556240150505&text=Oi!%20Queria%20saber%20qual%20%C3%A9%20o%20pulo%20do%20gato%20para%20o%20streaming!" target="_blank" class="inline-flex w-full md:w-auto items-center justify-center gap-2 bg-flag-green text-white font-brutal text-sm sm:text-base md:text-lg px-4 sm:px-6 py-3 brutal-border shadow-brutal hover:!bg-neon-yellow hover:!text-black hover:translate-y-[8px] hover:translate-x-[8px] hover:shadow-none transition-all uppercase cursor-pointer whitespace-normal break-words leading-snug">
+                                    <svg viewBox="0 0 24 24" class="w-5 h-5 sm:w-6 sm:h-6 fill-current flex-shrink-0" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.305-.88-.653-1.474-1.46-1.646-1.757-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+                                    </svg>
+                                    Conheça o pulo do gato
+                                </a>
+                            </div>
                         </div>
 
                         <!-- 3. Open Finance -->
@@ -502,7 +513,7 @@
                             <h3 class="font-brutal text-2xl md:text-4xl text-flag-blue mb-4 tracking-wide uppercase group-hover:text-neon-yellow transition-colors">3. Open Finance Ativo</h3>
                             <p class="text-base md:text-lg text-gray-800 mb-6 group-hover:text-white transition-colors">Open Finance ativo e com no mínimo 80% do patrimônio alocado com AUVP.</p>
                             
-                            <button onclick="openTutorial('modal-openfinance')" class="block w-full md:w-auto bg-flag-blue text-white font-brutal text-sm sm:text-base md:text-lg px-3 sm:px-6 py-3 brutal-border shadow-brutal group-hover:bg-neon-yellow group-hover:text-black hover:!bg-flag-green hover:!text-white hover:-translate-y-1 hover:-translate-x-1 hover:shadow-none transition-all uppercase cursor-pointer text-center whitespace-normal break-words leading-snug">
+                            <button onclick="openTutorial('modal-openfinance')" class="block w-full md:w-auto bg-flag-blue text-white font-brutal text-sm sm:text-base md:text-lg px-3 sm:px-6 py-3 brutal-border shadow-brutal group-hover:bg-neon-yellow group-hover:text-black hover:!bg-flag-green hover:!text-white hover:translate-y-[8px] hover:translate-x-[8px] hover:shadow-none transition-all uppercase cursor-pointer text-center whitespace-normal break-words leading-snug">
                                 Tutorial para ativar Open Finance
                             </button>
                         </div>
@@ -517,7 +528,7 @@
                     <p class="border-l-4 border-gray-400 pl-4 text-sm text-gray-500"><strong>Obs:</strong> É possível cadastrar contas em nome de terceiros também.</p>
                     
                     <div class="mt-12 text-center w-full">
-                        <button id="go-to-form-btn" class="w-full sm:w-auto px-8 md:px-12 mx-auto bg-flag-blue text-white font-brutal text-2xl md:text-3xl py-3 md:py-4 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase inline-block whitespace-normal break-words">
+                        <button id="go-to-form-btn" class="w-full sm:w-auto px-8 md:px-12 mx-auto bg-flag-blue text-white font-brutal text-2xl md:text-3xl py-3 md:py-4 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-[8px] hover:translate-x-[8px] hover:shadow-none transition-all uppercase inline-block whitespace-normal break-words">
                             Ir para o Formulário
                         </button>
                     </div>
@@ -631,7 +642,7 @@
                                         </div>
                                     </div>
 
-                                    <button type="button" id="next-step-btn" class="w-full bg-flag-blue text-white font-brutal text-lg sm:text-xl md:text-2xl py-3 mt-4 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase whitespace-normal break-words leading-snug">
+                                    <button type="button" id="next-step-btn" class="w-full bg-flag-blue text-white font-brutal text-lg sm:text-xl md:text-2xl py-3 mt-4 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-[8px] hover:translate-x-[8px] hover:shadow-none transition-all uppercase whitespace-normal break-words leading-snug">
                                         PRÓXIMO PASSO &gt;
                                     </button>
                                 </div>
@@ -701,10 +712,10 @@
                                     </div>
 
                                     <div class="flex gap-2 md:gap-3 mt-4">
-                                        <button type="button" id="back-step-btn" class="w-1/3 bg-white text-black font-brutal text-xs sm:text-sm md:text-lg py-3 px-1 brutal-border shadow-brutal hover:bg-gray-200 hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase whitespace-normal break-words leading-snug">
+                                        <button type="button" id="back-step-btn" class="w-1/3 bg-white text-black font-brutal text-xs sm:text-sm md:text-lg py-3 px-1 brutal-border shadow-brutal hover:bg-gray-200 hover:translate-y-[8px] hover:translate-x-[8px] hover:shadow-none transition-all uppercase whitespace-normal break-words leading-snug">
                                             &lt; Voltar
                                         </button>
-                                        <button type="submit" class="w-2/3 bg-flag-green text-white font-brutal text-base sm:text-xl md:text-2xl py-3 px-2 brutal-border shadow-brutal hover:bg-flag-blue hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase whitespace-normal break-words leading-snug">
+                                        <button type="submit" class="w-2/3 bg-flag-green text-white font-brutal text-base sm:text-xl md:text-2xl py-3 px-2 brutal-border shadow-brutal hover:bg-flag-blue hover:text-white hover:translate-y-[8px] hover:translate-x-[8px] hover:shadow-none transition-all uppercase whitespace-normal break-words leading-snug">
                                             CONCLUIR
                                         </button>
                                     </div>
@@ -722,8 +733,21 @@
             </div>
         </section>
 
+        <!-- DOBRA EXTRA: Chamada WhatsApp -->
+        <div class="breakout-elementor bg-flag-green !bg-flag-green w-full py-8 md:py-10 px-4 sm:px-8 md:px-12 relative flex flex-col md:flex-row items-center justify-center gap-4 md:gap-8 z-20">
+            <h3 class="font-brutal text-2xl md:text-3xl lg:text-4xl text-white text-center md:text-left uppercase leading-tight m-0">
+                Ficou com alguma dúvida? <br class="hidden md:block"> Fale com nosso atendimento!
+            </h3>
+            <a href="https://api.whatsapp.com/send?phone=556240150505&text=Oi!%20Fiquei%20com%20d%C3%BAvida%20sobre%20a%20campanha%20da%20Copa." target="_blank" class="inline-flex w-full md:w-auto items-center justify-center gap-3 bg-flag-green text-white font-brutal text-lg md:text-xl px-6 py-3 md:py-4 brutal-border shadow-brutal hover:!bg-white hover:!text-flag-green active:!bg-white active:!text-flag-green hover:translate-y-[8px] hover:translate-x-[8px] hover:shadow-none transition-all uppercase whitespace-normal break-words text-center">
+                <svg viewBox="0 0 24 24" class="w-6 h-6 fill-current flex-shrink-0" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.305-.88-.653-1.474-1.46-1.646-1.757-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+                </svg>
+                CHAMAR SUPORTE
+            </a>
+        </div>
+
         <!-- DOBRA 3: FAQ (Perguntas Frequentes) -->
-        <div id="faq-dobra" class="breakout-elementor bg-white !bg-white min-h-screen py-16 md:py-24 relative flex flex-col items-center justify-start border-t-[12px] border-neon-yellow">
+        <div id="faq-dobra" class="breakout-elementor bg-white !bg-white min-h-screen py-16 md:py-24 relative flex flex-col items-center justify-start">
             
             <!-- Removido o max-w para ocupar a largura total do ecrã e adicionado centralização do conteúdo -->
             <div class="w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-12 xl:px-20 2xl:px-32 text-black">
@@ -857,7 +881,7 @@
                 <p class="font-body font-bold text-gray-700 text-base md:text-lg border-t-4 border-flag-green pt-4">
                     Todas as respostas passarão por uma análise de dados e adequação, conforme requisitos e regulamento da campanha. Caso você se encaixe, um e-mail chegará na sua conta confirmando a solicitação de resgate.
                 </p>
-                <button id="back-home-btn" class="w-full bg-flag-blue text-white font-brutal text-2xl py-3 mt-8 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-1 hover:translate-x-1 hover:shadow-none transition-all uppercase">
+                <button id="back-home-btn" class="w-full bg-flag-blue text-white font-brutal text-2xl py-3 mt-8 brutal-border shadow-brutal hover:bg-flag-green hover:text-white hover:translate-y-[8px] hover:translate-x-[8px] hover:shadow-none transition-all uppercase">
                     VOLTAR AO INÍCIO
                 </button>
             </div>
@@ -923,7 +947,7 @@
                 </div>
             </div>
             
-            <button onclick="closeTutorial('modal-debito')" class="w-full bg-flag-blue text-white font-brutal text-xl py-3 mt-6 brutal-border shadow-brutal hover:bg-neon-yellow hover:text-black hover:-translate-y-1 hover:-translate-x-1 hover:shadow-none transition-all uppercase cursor-pointer">
+            <button onclick="closeTutorial('modal-debito')" class="w-full bg-flag-blue text-white font-brutal text-xl py-3 mt-6 brutal-border shadow-brutal hover:bg-neon-yellow hover:text-black hover:translate-y-[8px] hover:translate-x-[8px] hover:shadow-none transition-all uppercase cursor-pointer">
                 Entendido
             </button>
         </div>
@@ -976,7 +1000,7 @@
                 </div>
             </div>
             
-            <button onclick="closeTutorial('modal-openfinance')" class="w-full bg-flag-blue text-white font-brutal text-xl py-3 mt-6 brutal-border shadow-brutal hover:bg-neon-yellow hover:text-black hover:-translate-y-1 hover:-translate-x-1 hover:shadow-none transition-all uppercase cursor-pointer">
+            <button onclick="closeTutorial('modal-openfinance')" class="w-full bg-flag-blue text-white font-brutal text-xl py-3 mt-6 brutal-border shadow-brutal hover:bg-neon-yellow hover:text-black hover:translate-y-[8px] hover:translate-x-[8px] hover:shadow-none transition-all uppercase cursor-pointer">
                 Entendido
             </button>
         </div>
@@ -1012,7 +1036,7 @@
                 </div>
             </div>
 
-            <button id="accept-terms-btn" class="w-full bg-flag-green text-white font-brutal text-xl py-3 mt-6 brutal-border shadow-brutal hover:bg-flag-blue hover:text-white hover:-translate-y-1 hover:-translate-x-1 hover:shadow-none transition-all uppercase cursor-pointer">
+            <button id="accept-terms-btn" class="w-full bg-flag-green text-white font-brutal text-xl py-3 mt-6 brutal-border shadow-brutal hover:bg-flag-blue hover:text-white hover:translate-y-[8px] hover:translate-x-[8px] hover:shadow-none transition-all uppercase cursor-pointer">
                 Li, Entendi e Concordo
             </button>
         </div>
@@ -1558,6 +1582,7 @@
                     const answer = btn.nextElementSibling;
                     const icon = btn.querySelector('.faq-icon');
                     const title = btn.querySelector('.faq-title');
+                    const box = btn.closest('.faq-box-force-bg');
                     const isOpen = answer.classList.contains('max-h-[1000px]');
 
                     // Fecha todos os outros itens para manter o formato de sanfona limpo
@@ -1571,6 +1596,9 @@
                     document.querySelectorAll('.faq-title').forEach(t => {
                         t.classList.remove('!text-flag-green');
                     });
+                    document.querySelectorAll('.faq-box-force-bg').forEach(b => {
+                        b.classList.remove('faq-box-active');
+                    });
 
                     // Se não estava aberto, expande o item atual
                     if (!isOpen) {
@@ -1578,6 +1606,7 @@
                         answer.classList.add('max-h-[1000px]', 'opacity-100');
                         icon.classList.add('rotate-45', '!text-flag-green'); // Rotaciona o + para X e fica verde
                         if (title) title.classList.add('!text-flag-green'); // Mantém o texto verde enquanto ativo
+                        if (box) box.classList.add('faq-box-active'); // Perpetua o efeito hover na caixa
                     }
                 });
             });
